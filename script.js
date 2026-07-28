@@ -1,70 +1,69 @@
 /**
  * script.js - Core Omnitrix System
- * Synchronized with official Ben 10 Alien Assets & Hourglass Core SVG Icons.
+ * Cập nhật: Dùng ảnh local (assets/images/) và đồng bộ Icon Biomnitrix (Layers)
  */
 
 /* ==========================================================================
-   1. DỮ LIỆU GEN ALIEN BEN 10 (ẢNH CHUẨN BEN 10 SPECIES)
+   1. DỮ LIỆU GEN ALIEN BEN 10 (ẢNH LOCAL TỪ MÁY)
    ========================================================================== */
 const ALIENS_DATA = [
   { 
     id: 1, 
     name: "Heatblast", 
     species: "Pyronite", 
-    image: "https://vignette.wikia.nocookie.net/ben10/images/2/23/Heatblast_OV_Render.png", 
+    image: "assets/images/heatblast.png", 
     stats: { power: 8, speed: 6, durability: 7, intelligence: 6, energy: 9 } 
   },
   { 
     id: 2, 
     name: "Four Arms", 
     species: "Tetramand", 
-    image: "https://vignette.wikia.nocookie.net/ben10/images/e/e0/Fourarms_ov_pose.png", 
+    image: "assets/images/fourarms.png", // Lưu ý: Nếu bạn lưu là "four arms.png" có dấu cách thì sửa lại dòng này nhé
     stats: { power: 10, speed: 5, durability: 9, intelligence: 4, energy: 5 } 
   },
   { 
     id: 3, 
     name: "XLR8", 
     species: "Kineceleran", 
-    image: "https://vignette.wikia.nocookie.net/ben10/images/c/c2/XLR8_OV_Render.png", 
+    image: "assets/images/xlr8.png", 
     stats: { power: 5, speed: 10, durability: 5, intelligence: 7, energy: 6 } 
   },
   { 
     id: 4, 
     name: "Diamondhead", 
     species: "Petrosapien", 
-    image: "https://vignette.wikia.nocookie.net/ben10/images/3/30/Diamondhead_OV_Pose.png", 
+    image: "assets/images/diamondhead.png", 
     stats: { power: 8, speed: 5, durability: 10, intelligence: 6, energy: 7 } 
   },
   { 
     id: 5, 
     name: "Upgrade", 
     species: "Galvanic Mechamorph", 
-    image: "https://vignette.wikia.nocookie.net/ben10/images/8/87/Upgrade_OV_Render.png", 
+    image: "assets/images/upgrade.png", 
     stats: { power: 6, speed: 7, durability: 7, intelligence: 9, energy: 9 } 
   },
   { 
     id: 6, 
     name: "Ghostfreak", 
     species: "Ectonurite", 
-    image: "https://vignette.wikia.nocookie.net/ben10/images/b/b5/Ghostfreak_OV_Official.png", 
+    image: "assets/images/ghostfreak.png", 
     stats: { power: 6, speed: 7, durability: 6, intelligence: 8, energy: 8 } 
   }
 ];
 
 /* ==========================================================================
-   2. SVG ICONS CHUẨN BIỂU TƯỢNG OMNITRIX / BIOMNITRIX (HÌNH ĐỒNG HỒ CÁT)
+   2. SVG ICONS (ĐỒNG BỘ THEO ICON TAB BIOMNITRIX CỦA BẠN)
    ========================================================================== */
-// Icon Đồng Hồ Cát Biomnitrix Đôi / Classic Omnitrix Dial
+// Icon Biomnitrix (Hình layers / 3 lớp xếp chồng giống hệt trên Tab)
 const OMNITRIX_ICON_SVG = `
-  <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="7" fill="rgba(0,0,0,0.45)"/>
-    <!-- Hourglass shape inner pattern -->
-    <polygon points="18,18 82,18 50,50" fill="currentColor" />
-    <polygon points="18,82 82,82 50,50" fill="currentColor" />
-    <circle cx="50" cy="50" r="7" fill="#0a0c10" stroke="currentColor" stroke-width="3"/>
+  <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+    <polyline points="2 17 12 22 22 17"></polyline>
+    <polyline points="2 12 12 17 22 12"></polyline>
   </svg>
 `;
 
+// Icon Ultimatrix (Hình tia chớp/năng lượng)
 const ULTIMATRIX_ICON_SVG = `
   <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6" stroke-dasharray="8 4"/>
@@ -75,6 +74,7 @@ const ULTIMATRIX_ICON_SVG = `
   </svg>
 `;
 
+// Icon Chaquetrix (Hình trái tim công nghệ)
 const CHAQUETRIX_ICON_SVG = `
   <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="7"/>
@@ -85,7 +85,7 @@ const CHAQUETRIX_ICON_SVG = `
 `;
 
 /* ==========================================================================
-   3. HỆ THỐNG ÂM THANH SCI-FI (WEB AUDIO API)
+   3. HỆ THỐNG ÂM THANH SCI-FI
    ========================================================================== */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
@@ -225,7 +225,6 @@ function showToast(msg, isError = false) {
   toastTimer = setTimeout(() => { toast.hidden = true; }, 2800);
 }
 
-// Cập nhật Header Logo & Cột Phải Radar Core với Icon Omnitrix Mới
 function updateHeaderAndTheme(tabKey) {
   const config = HEADER_CONFIG[tabKey];
   if (!config) return;
@@ -289,7 +288,7 @@ function renderDNAGrid() {
           <button type="button" class="slot-remove-btn" data-index="${i}">&times;</button>
         </div>
         <div class="slot-alien-image-wrap">
-          <img class="slot-alien-image" src="${alien.image}" alt="${alien.name}" />
+          <img class="slot-alien-image" src="${alien.image}" alt="${alien.name}" onerror="this.src='https://via.placeholder.com/150/161a22/1df2a5?text=NO+IMAGE'" />
         </div>
       `;
     } else {
@@ -430,7 +429,7 @@ function openModal(slotIndex = null) {
     const isTaken = slotIndex !== null && takenIds.has(alien.id);
     return `
       <div class="modal-item ${isTaken ? 'modal-item--disabled' : ''}" data-id="${alien.id}">
-        <img src="${alien.image}" alt="${alien.name}" />
+        <img src="${alien.image}" alt="${alien.name}" onerror="this.src='https://via.placeholder.com/150/161a22/1df2a5?text=NO+IMAGE'" />
         <span>${alien.name}</span>
         <small>${alien.species}</small>
       </div>
