@@ -511,18 +511,41 @@ button {
 
 .radar-ring {
   position: absolute;
-  inset: 0;
   border-radius: 50%;
-  border: 1.5px dashed var(--neon);
-  opacity: 0.55;
-  animation: spin 16s linear infinite;
+  border-style: dashed;
+  border-color: var(--neon);
+  pointer-events: none;
 }
 
-.radar-ring--outer {
-  inset: 40px;
-  opacity: 0.3;
-  animation-duration: 24s;
-  animation-direction: reverse;
+/* Vòng ngoài cùng — lớn nhất, mờ nhất, xoay rất chậm */
+.radar-ring--r1 {
+  inset: 0;
+  border-width: 1px;
+  opacity: 0.2;
+  animation: spin 36s linear infinite;
+}
+
+/* Vòng thứ hai — xoay ngược chiều, nhanh hơn một chút */
+.radar-ring--r2 {
+  inset: 13%;
+  border-width: 1.5px;
+  opacity: 0.4;
+  animation: spin 22s linear infinite reverse;
+}
+
+/* Vòng thứ ba — đứng yên (tĩnh), chỉ để tạo lớp chiều sâu */
+.radar-ring--r3 {
+  inset: 27%;
+  border-width: 1px;
+  opacity: 0.26;
+}
+
+/* Vòng trong cùng — nhỏ nhất, đậm nhất, xoay nhanh nhất */
+.radar-ring--r4 {
+  inset: 42%;
+  border-width: 2px;
+  opacity: 0.6;
+  animation: spin 15s linear infinite;
 }
 
 @keyframes spin {
@@ -538,14 +561,30 @@ button {
   position: relative;
   z-index: 2;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 16px;
 }
 
-.dna-core-emoji {
-  font-size: 96px;
+.dna-core-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neon);
   animation: float 3.2s ease-in-out infinite;
-  filter: drop-shadow(0 0 24px var(--neon-glow));
+  /* Hiệu ứng phát sáng mờ ảo (hazy glow) nhiều lớp quanh icon trung tâm */
+  filter: drop-shadow(0 0 10px var(--neon-glow)) drop-shadow(0 0 26px var(--neon-dim))
+    drop-shadow(0 0 48px rgba(29, 242, 165, 0.22));
+}
+
+.dna-core-status {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  animation: statusPulse 2.6s ease-in-out infinite;
 }
 
 @keyframes float {
@@ -555,6 +594,16 @@ button {
   }
   50% {
     transform: translateY(-18px);
+  }
+}
+
+@keyframes statusPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
   }
 }
 
