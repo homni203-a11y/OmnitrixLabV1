@@ -1,232 +1,214 @@
 /**
- * script.js - Core Omnitrix System
- * Senior Full-stack Architecture: State Management, Clean DOM Manipulation, Micro-interactions & Audio Engine.
+ * LÕI OMNITRIX - CORE JAVASCRIPT
+ * Tái cấu trúc chuẩn Modular, xử lý State Management & Component Rendering.
  */
 
-/* ==========================================================================
-   1. MÔ PHỎNG DỮ LIỆU GEN ALIEN & FUSION ALGORITHM
-   ========================================================================== */
+// 1. DATA & STATE
 const ALIENS_DATA = [
-  { id: 1, name: "Heatblast", species: "Pyronite", image: "https://static.wikia.nocookie.net/ben10/images/2/20/Heatblast_omniverse_official.png/revision/latest?cb=20230814111634", stats: { power: 8, speed: 6, durability: 7, intelligence: 6, energy: 9 } },
-  { id: 2, name: "Four Arms", species: "Tetramand", image: "https://static.wikia.nocookie.net/ben10/images/d/d0/Four_arms_os_render.png/revision/latest?cb=20251012081022", stats: { power: 10, speed: 5, durability: 9, intelligence: 4, energy: 5 } },
-  { id: 3, name: "XLR8", species: "Kineceleran", image: "https://static.wikia.nocookie.net/ben10/images/5/57/XLR8_OV2.png/revision/latest?cb=20240223125033", stats: { power: 5, speed: 10, durability: 5, intelligence: 7, energy: 6 } },
-  { id: 4, name: "Diamondhead", species: "Petrosapien", image: "https://static.wikia.nocookie.net/ben10/images/2/2c/Diamondhead_oficial.png/revision/latest?cb=20230814094606", stats: { power: 8, speed: 5, durability: 10, intelligence: 6, energy: 7 } },
-  { id: 5, name: "Upgrade", species: "Galvanic Mechamorph", image: "https://static.wikia.nocookie.net/ben10/images/7/75/OV_Upgrade.png/revision/latest?cb=20210105173649", stats: { power: 6, speed: 7, durability: 7, intelligence: 9, energy: 9 } },
-  { id: 6, name: "Ghostfreak", species: "Ectonurite", image: "https://static.wikia.nocookie.net/ben10/images/6/6d/Ghostfreak_ov_official.png/revision/latest?cb=20210515171015", stats: { power: 6, speed: 7, durability: 6, intelligence: 8, energy: 8 } }
+  { id: 1, name: "Heatblast", species: "Pyronite", image: "https://static.wikia.nocookie.net/ben10/images/2/20/Heatblast_omniverse_official.png" },
+  { id: 2, name: "Four Arms", species: "Tetramand", image: "https://static.wikia.nocookie.net/ben10/images/d/d0/Four_arms_os_render.png" },
+  { id: 3, name: "XLR8", species: "Kineceleran", image: "https://static.wikia.nocookie.net/ben10/images/5/57/XLR8_OV2.png" },
+  { id: 4, name: "Diamondhead", species: "Petrosapien", image: "https://static.wikia.nocookie.net/ben10/images/2/2c/Diamondhead_oficial.png" }
 ];
 
-/* ==========================================================================
-   2. HỆ THỐNG ÂM THANH SCI-FI (WEB AUDIO API)
-   ========================================================================== */
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-let audioCtx = null;
-
-function initAudio() {
-  if (!audioCtx) {
-    audioCtx = new AudioContext();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-}
-
-function playSciFiBeep() {
-  try {
-    initAudio();
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(580, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.08);
-
-    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.08);
-  } catch (e) {
-    console.warn("Audio Context Error:", e);
-  }
-}
-
-function playDiceRollSound() {
-  try {
-    initAudio();
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    for (let i = 0; i < 5; i++) {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(300 + Math.random() * 500, now + i * 0.05);
-      gain.gain.setValueAtTime(0.08, now + i * 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.04);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(now + i * 0.05);
-      osc.stop(now + i * 0.05 + 0.04);
-    }
-  } catch (e) {
-    console.warn("Dice Sound Error:", e);
-  }
-}
-
-/* ==========================================================================
-   3. STATE MANAGEMENT
-   ========================================================================== */
 const state = {
-  activeTab: 'biomnitrix', // 'biomnitrix' | 'ultimatrix' | 'chaquetrix'
-  slotCount: 2,           // 2-5 (Chỉ áp dụng cho Biomnitrix)
+  playerName: null,        // Quản lý định danh User Google (Module 3)
+  activeTab: 'biomnitrix', // biomnitrix | ultimatrix | chaquetrix
+  slotCount: 2,
   selectedAliens: [null, null],
   activeModalSlotIndex: null,
-  bodyProportions: 50,     // Dành riêng cho Chaquetrix
-  mobileActiveView: 'control' // 'control' (Cột trái) | 'result' (Cột phải)
+  
+  // Custom states cho Subpanels
+  bioMainSlot: 0,          
+  bioStability: 'stable',  
+  bioBalance: 50,          
+  chaqSegments: 7,         
+  chaqActiveSegment: 3,    
+  chaqPersonality: 'TOMBOY' 
 };
 
-// Cấu hình Header theo Tab
 const HEADER_CONFIG = {
   biomnitrix: {
     title: 'BIOMNITRIX',
-    subtitle: 'USER_ID // Ben Tennyson',
-    icon: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 17 22 12"></polyline></svg>`,
-    processText: 'DUNG HỢP ADN',
-    processIcon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 17 22 12"></polyline></svg>`
+    defaultChar: 'Ben Tennyson',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 17 22 12"></polyline></svg>`,
+    processText: 'DUNG HỢP ADN'
   },
   ultimatrix: {
     title: 'ULTIMATRIX',
-    subtitle: 'USER_ID // Albedo',
-    icon: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
-    processText: 'KHỞI ĐỘNG TIẾN HÓA',
-    processIcon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`
+    defaultChar: 'Albedo',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
+    processText: 'KHỞI ĐỘNG TIẾN HÓA'
   },
   chaquetrix: {
     title: 'CHAQUETRIX',
-    subtitle: 'USER_ID // Haremic',
-    icon: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
-    processText: 'TIẾN HÀNH TRIỆU HỒI HAREM',
-    processIcon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
+    defaultChar: 'Haremic',
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+    processText: 'TRIỆU HỒI HAREM'
   }
 };
 
-/* ==========================================================================
-   4. DOM ELEMENTS
-   ========================================================================== */
-const brandIconWrap = document.getElementById('brandIconWrap');
-const brandTitle = document.getElementById('brandTitle');
-const brandSubtitle = document.getElementById('brandSubtitle');
-const btnCycleCore = document.getElementById('btnCycleCore');
+// 2. DOM ELEMENTS
+const DOM = {
+  brandIconWrap: document.getElementById('brandIconWrap'),
+  brandTitle: document.getElementById('brandTitle'),
+  brandSubtitle: document.getElementById('brandSubtitle'),
+  tabs: document.querySelectorAll('.tab'),
+  dnaGrid: document.getElementById('dnaGrid'),
+  subpanelContainer: document.getElementById('subpanelContainer'),
+  btnProcess: document.getElementById('btnProcess'),
+  btnProcessIcon: document.getElementById('btnProcessIcon'),
+  btnProcessText: document.getElementById('btnProcessText'),
+  radarCoreIcon: document.querySelector('#radarCoreIcon svg'),
+  radarCoreStatus: document.getElementById('radarCoreStatus')
+};
 
-const tabs = document.querySelectorAll('.tab');
-const slotStepper = document.getElementById('slotStepper');
-const slotCountDisplay = document.getElementById('slotCountDisplay');
-const btnSlotMinus = document.getElementById('btnSlotMinus');
-const btnSlotPlus = document.getElementById('btnSlotPlus');
-const btnDice = document.getElementById('btnDice');
-const dnaGrid = document.getElementById('dnaGrid');
-const subpanelContainer = document.getElementById('subpanelContainer');
-
-const btnProcess = document.getElementById('btnProcess');
-const btnProcessIcon = document.getElementById('btnProcessIcon');
-const btnProcessText = document.getElementById('btnProcessText');
-
-const modalOverlay = document.getElementById('modalOverlay');
-const modalTitle = document.getElementById('modalTitle');
-const modalGrid = document.getElementById('modalGrid');
-const btnModalClose = document.getElementById('btnModalClose');
-
-const fusionResult = document.getElementById('fusionResult');
-const toast = document.getElementById('toast');
-
-const leftSidebar = document.getElementById('leftSidebar');
-const rightPanel = document.getElementById('rightPanel');
-const navBtnControl = document.getElementById('navBtnControl');
-const navBtnResult = document.getElementById('navBtnResult');
-const btnArena = document.getElementById('btnArena');
-const btnCollection = document.getElementById('btnCollection');
-
-let toastTimer = null;
-
-/* ==========================================================================
-   5. RENDER & UI LOGIC
-   ========================================================================== */
-function showToast(msg, isError = false) {
-  clearTimeout(toastTimer);
-  toast.textContent = msg;
-  toast.classList.toggle('toast--error', isError);
-  toast.hidden = false;
-  toastTimer = setTimeout(() => { toast.hidden = true; }, 2800);
-}
-
-// MODULE 2: Cập nhật Header & Theme Engine
-function updateHeaderAndTheme(tabKey) {
-  const config = HEADER_CONFIG[tabKey];
-  if (!config) return;
-
-  // Cập nhật DOM Header Góc Trái
-  brandIconWrap.innerHTML = config.icon;
-  brandTitle.textContent = config.title;
-  brandSubtitle.textContent = config.subtitle;
-
-  // Cập nhật Theme Body
-  document.body.className = `theme-${tabKey}`;
-
-  // Đồng bộ Active trạng thái Tab trên Cột Trái
-  tabs.forEach(t => {
-    const active = t.dataset.tab === tabKey;
-    t.classList.toggle('tab-active', active);
-  });
-
-  // Cập nhật Nút Action dưới cùng
-  btnProcessText.textContent = config.processText;
-  btnProcess.querySelector('svg').outerHTML = config.processIcon;
-
-  // Cập nhật Radar Center Icon
-  const radarIcon = document.getElementById('radarCoreIcon');
-  if (radarIcon) radarIcon.innerHTML = config.icon;
-}
-
-// SWITCH TAB CORE LOGIC
+// 3. CORE LOGIC TABS & RENDERING
 function switchTab(tabKey) {
   state.activeTab = tabKey;
-  updateHeaderAndTheme(tabKey);
+  const config = HEADER_CONFIG[tabKey];
 
+  // Update Header & Icon (Module 2)
+  DOM.brandIconWrap.innerHTML = config.icon;
+  DOM.brandTitle.textContent = config.title;
+  updateHeaderSubtitle(); 
+  document.body.className = `theme-${tabKey}`;
+  DOM.radarCoreIcon.outerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">${config.icon}</svg>`;
+  DOM.btnProcessText.textContent = config.processText;
+  DOM.btnProcessIcon.outerHTML = `<svg id="btnProcessIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">${config.icon}</svg>`;
+  
+  // MODULE 2: Reset Status
+  DOM.radarCoreStatus.textContent = "CHỜ KHỞI ĐỘNG";
+
+  DOM.tabs.forEach(t => t.classList.toggle('tab-active', t.dataset.tab === tabKey));
+  
   if (tabKey === 'ultimatrix' || tabKey === 'chaquetrix') {
-    // Khóa cứng ở 1 ô ADN
     state.slotCount = 1;
     state.selectedAliens = [state.selectedAliens[0] || null];
-    slotStepper.style.display = 'none';
   } else {
-    // Biomnitrix: Mở lại Stepper
-    slotStepper.style.display = 'flex';
-    if (state.selectedAliens.length < 2) {
-      state.slotCount = 2;
-      state.selectedAliens = [state.selectedAliens[0] || null, null];
-    }
+    state.slotCount = 2;
+    if(state.selectedAliens.length < 2) state.selectedAliens.push(null);
   }
 
   renderDNAGrid();
-  renderSubPanels();
+  renderDynamicSubPanels();
 }
 
-// RENDER ADN SLOTS
+function updateHeaderSubtitle() {
+  const config = HEADER_CONFIG[state.activeTab];
+  const displayName = state.playerName ? state.playerName : config.defaultChar;
+  DOM.brandSubtitle.textContent = `USER_ID // ${displayName}`;
+}
+
+// 4. DYNAMIC SUBPANELS (MODULE 4 & 5)
+function renderDynamicSubPanels() {
+  const container = DOM.subpanelContainer;
+  container.innerHTML = '';
+
+  if (state.activeTab === 'biomnitrix') {
+    // MODULE 4: Menu Chính/Phụ & Cân bằng & Bất ổn
+    const stabilityText = {
+      'stable': 'Dung hợp an toàn, giữ vững lý trí.',
+      'unstable': 'Đột biến sức mạnh, khó kiểm soát.',
+      'chaos': 'Nguy cơ hủy diệt gen diện rộng.'
+    };
+
+    container.innerHTML = `
+      <div class="subpanel-card">
+        <div class="subpanel-card-title">CẤU TRÚC GEN CHÍNH / PHỤ</div>
+        <div class="bio-roles">
+          <button class="bio-role-btn ${state.bioMainSlot === 0 ? 'active' : ''}" onclick="setBioMainSlot(0)">
+             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+             ${state.bioMainSlot === 0 ? 'CƠ THỂ CHÍNH' : 'GEN PHỤ'} (ADN 1)
+          </button>
+          <button class="bio-role-btn ${state.bioMainSlot === 1 ? 'active' : ''}" onclick="setBioMainSlot(1)">
+             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-5.33 4.55-8 8.48-8 11.8 0 4.98 3.8 8.2 8 8.2s8-3.22 8-8.2c0-3.32-2.67-7.25-8-11.8z"/></svg>
+             ${state.bioMainSlot === 1 ? 'CƠ THỂ CHÍNH' : 'GEN PHỤ'} (ADN 2)
+          </button>
+        </div>
+      </div>
+      <div class="subpanel-card">
+        <div class="subpanel-card-title">CÂN BẰNG ADN: <span id="bioBalanceVal">${state.bioBalance}%</span></div>
+        <input type="range" class="range-slider" min="0" max="100" value="${state.bioBalance}" oninput="updateBioBalance(this.value)">
+      </div>
+      <div class="subpanel-card">
+        <div class="subpanel-card-title">KIỂM SOÁT BẤT ỔN GEN</div>
+        <div class="stability-grid">
+          <button class="stability-btn ${state.bioStability === 'stable' ? 'active' : ''}" onclick="setBioStability('stable')">ỔN ĐỊNH</button>
+          <button class="stability-btn ${state.bioStability === 'unstable' ? 'active' : ''}" onclick="setBioStability('unstable')">BẤT ỔN</button>
+          <button class="stability-btn ${state.bioStability === 'chaos' ? 'active' : ''}" onclick="setBioStability('chaos')">HỖN MANG</button>
+        </div>
+        <p class="stability-desc" id="stabilityDesc">${stabilityText[state.bioStability]}</p>
+      </div>
+    `;
+  } 
+  else if (state.activeTab === 'ultimatrix') {
+    // MODULE 5: 3 Menu Ultimatrix
+    container.innerHTML = `
+      <div class="subpanel-card">
+        <div class="subpanel-card-title">✦ THÔNG SỐ TIẾN HÓA ULTIMATE</div>
+        <div class="subpanel-grid">
+          <div class="subpanel-item">
+            <svg width="18" height="18" fill="var(--theme-base)" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            <span class="subpanel-item-val" style="font-size:9px">Gia Tốc x1000</span>
+          </div>
+          <div class="subpanel-item">
+            <svg width="18" height="18" fill="var(--theme-base)" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm6.72 5.36L12 11.63l-6.72-3.27L12 5.09l6.72 3.27z"/></svg>
+            <span class="subpanel-item-val" style="font-size:9px">Hệ Sinh Thái Giả Lập</span>
+          </div>
+          <div class="subpanel-item">
+            <svg width="18" height="18" fill="var(--theme-base)" viewBox="0 0 24 24"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.06.5-9 4.76-9 9.95 0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.06-4.09l-2.6-1.53C16.17 17.98 14.21 19 12 19z"/></svg>
+            <span class="subpanel-item-val" style="font-size:9px">Cường Hoá Tối Đa</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  else if (state.activeTab === 'chaquetrix') {
+    // MODULE 5: Thanh nấc & Grid Tính Cách
+    const segmentsHTML = Array.from({length: state.chaqSegments}).map((_, i) => 
+      `<div class="chaq-segment ${i === state.chaqActiveSegment ? 'active' : ''}" onclick="setChaqSegment(${i})"></div>`
+    ).join('');
+
+    const personalities = ['TOMBOY', 'TSUNDERE', 'YANDERE', 'THANH LỊCH', 'MỊ YÊU', 'MOMMY', 'NHÚT NHÁT', 'GYARU'];
+    const pHTML = personalities.map(p => 
+      `<div class="chaq-personality ${p === state.chaqPersonality ? 'active' : ''}" onclick="setChaqPersonality('${p}')">${p}</div>`
+    ).join('');
+
+    container.innerHTML = `
+      <div class="subpanel-card">
+        <div class="subpanel-card-title">TỈ LỆ CƠ THỂ <span style="margin-left:auto; color:var(--text-secondary); font-size:9px;">B.THƯỜNG</span></div>
+        <div class="chaq-segments">${segmentsHTML}</div>
+      </div>
+      <div class="subpanel-card">
+        <div class="subpanel-card-title">TÍNH CÁCH ĐỒNG HÀNH</div>
+        <div class="chaq-personalities">${pHTML}</div>
+      </div>
+    `;
+  }
+}
+
+// 5. HELPER CỦA SUBPANEL
+window.setBioMainSlot = (slot) => { state.bioMainSlot = slot; renderDynamicSubPanels(); };
+window.updateBioBalance = (val) => { state.bioBalance = val; document.getElementById('bioBalanceVal').textContent = val + '%'; };
+window.setBioStability = (val) => { state.bioStability = val; renderDynamicSubPanels(); };
+window.setChaqSegment = (idx) => { state.chaqActiveSegment = idx; renderDynamicSubPanels(); };
+window.setChaqPersonality = (p) => { state.chaqPersonality = p; renderDynamicSubPanels(); };
+
+// 6. RENDER DNA GRID
 function renderDNAGrid() {
-  dnaGrid.innerHTML = '';
+  DOM.dnaGrid.innerHTML = '';
   for (let i = 0; i < state.slotCount; i++) {
     const alien = state.selectedAliens[i];
     const slotEl = document.createElement('div');
-    slotEl.className = `dna-slot ${alien ? 'dna-slot--filled' : ''}`;
+    slotEl.className = `dna-slot`;
     slotEl.dataset.index = i;
 
     if (alien) {
       slotEl.innerHTML = `
         <div class="slot-filled-header">
           <span class="slot-alien-name">${alien.name}</span>
-          <button type="button" class="slot-remove-btn" data-index="${i}">&times;</button>
+          <button type="button" class="slot-remove-btn" onclick="removeAlien(${i}, event)">&times;</button>
         </div>
         <div class="slot-alien-image-wrap">
           <img class="slot-alien-image" src="${alien.image}" alt="${alien.name}" />
@@ -235,271 +217,94 @@ function renderDNAGrid() {
     } else {
       slotEl.innerHTML = `
         <span class="slot-label">ADN ${i + 1}</span>
-        <div class="slot-empty-center">
-          <span class="slot-empty-arrow">↑</span>
+        <div class="slot-empty-center" onclick="openModal(${i})">
+          <span style="color:var(--text-secondary); font-size:16px;">↑</span>
           <span class="slot-empty-text">NẠP MÃ GEN</span>
         </div>
       `;
     }
-    dnaGrid.appendChild(slotEl);
-  }
-
-  slotCountDisplay.textContent = state.slotCount;
-  btnSlotMinus.disabled = state.slotCount <= 2;
-  btnSlotPlus.disabled = state.slotCount >= 5;
-}
-
-// MODULE 4: RENDER MENU PHỤ DÀNH RIÊNG CHO TỪNG TAB
-function renderSubPanels() {
-  subpanelContainer.innerHTML = '';
-
-  if (state.activeTab === 'ultimatrix') {
-    subpanelContainer.innerHTML = `
-      <div class="subpanel-card">
-        <div class="subpanel-card-title">✦ THÔNG SỐ TIẾN HÓA ULTIMATE</div>
-        <div class="subpanel-grid">
-          <div class="subpanel-item">
-            <span class="subpanel-item-icon">⚡</span>
-            <span class="subpanel-item-label">Năng Lượng</span>
-            <span class="subpanel-item-val">100%</span>
-          </div>
-          <div class="subpanel-item">
-            <span class="subpanel-item-icon">🧬</span>
-            <span class="subpanel-item-label">Tuyến Gen</span>
-            <span class="subpanel-item-val">SUPREME</span>
-          </div>
-          <div class="subpanel-item">
-            <span class="subpanel-item-icon">💥</span>
-            <span class="subpanel-item-label">Xung Lực</span>
-            <span class="subpanel-item-val">x3.5</span>
-          </div>
-        </div>
-      </div>
-    `;
-  } else if (state.activeTab === 'chaquetrix') {
-    subpanelContainer.innerHTML = `
-      <div class="subpanel-card">
-        <div class="subpanel-card-title">✦ TÙY CHỈNH TRIỆU HỒI HAREM</div>
-        <div class="range-group">
-          <div class="range-header">
-            <span>Tỉ Lệ Cơ Thể (Body Proportions)</span>
-            <strong id="proportionVal">${state.bodyProportions}%</strong>
-          </div>
-          <input type="range" class="range-slider" id="proportionSlider" min="0" max="100" value="${state.bodyProportions}">
-        </div>
-      </div>
-    `;
-
-    const slider = document.getElementById('proportionSlider');
-    if (slider) {
-      slider.addEventListener('input', (e) => {
-        state.bodyProportions = e.target.value;
-        document.getElementById('proportionVal').textContent = `${state.bodyProportions}%`;
-      });
-    }
+    DOM.dnaGrid.appendChild(slotEl);
   }
 }
 
-/* ==========================================================================
-   6. EVENT HANDLERS & INTERACTIONS
-   ========================================================================== */
-
-// MODULE 2: Nút "ĐỔI LÕI VŨ TRỤ" (Vòng lặp Cycle Loop)
-btnCycleCore.addEventListener('click', () => {
-  const sequence = ['biomnitrix', 'ultimatrix', 'chaquetrix'];
-  const currentIndex = sequence.indexOf(state.activeTab);
-  const nextTab = sequence[(currentIndex + 1) % sequence.length];
-  switchTab(nextTab);
-  showToast(`Đã chuyển sang Lõi ${HEADER_CONFIG[nextTab].title}`);
-});
-
-// Chuyển Tab khi Click trực tiếp
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    switchTab(tab.dataset.tab);
-  });
-});
-
-// Tăng / Giảm ô ADN (Biomnitrix)
-btnSlotPlus.addEventListener('click', () => {
-  if (state.slotCount < 5) {
-    state.slotCount++;
-    state.selectedAliens.push(null);
-    renderDNAGrid();
-  }
-});
-
-btnSlotMinus.addEventListener('click', () => {
-  if (state.slotCount > 2) {
-    state.slotCount--;
-    state.selectedAliens.pop();
-    renderDNAGrid();
-  }
-});
-
-// MODULE 3: Nút Xúc Xắc (Randomizer) + Rung Lắc + Audio
-btnDice.addEventListener('click', () => {
-  playDiceRollSound();
-
-  // Animation rung lắc khung nút
-  btnDice.classList.remove('btn-dice-shake');
-  void btnDice.offsetWidth; // Force Reflow
-  btnDice.classList.add('btn-dice-shake');
-
-  // Logic Chọn Ngẫu Nhiên không trùng lặp
-  const shuffled = [...ALIENS_DATA].sort(() => 0.5 - Math.random());
-  for (let i = 0; i < state.slotCount; i++) {
-    state.selectedAliens[i] = shuffled[i] || null;
-  }
+window.removeAlien = (idx, e) => {
+  e.stopPropagation();
+  state.selectedAliens[idx] = null;
   renderDNAGrid();
-  showToast("Đã ngẫu nhiên hóa chuỗi gen ADN!");
-});
+};
 
-// Click vào ô ADN để Mở Modal Nạp Gen hoặc Xóa
-dnaGrid.addEventListener('click', (e) => {
-  const removeBtn = e.target.closest('.slot-remove-btn');
-  if (removeBtn) {
-    e.stopPropagation();
-    const idx = Number(removeBtn.dataset.index);
-    state.selectedAliens[idx] = null;
-    renderDNAGrid();
-    return;
-  }
+window.openModal = (idx) => {
+  state.activeModalSlotIndex = idx;
+  const grid = document.getElementById('modalGrid');
+  grid.innerHTML = ALIENS_DATA.map(a => `
+    <div class="modal-item" onclick="selectAlien(${a.id})">
+      <img src="${a.image}" alt="${a.name}">
+      <span>${a.name}</span>
+    </div>
+  `).join('');
+  document.getElementById('modalOverlay').hidden = false;
+};
 
-  const slot = e.target.closest('.dna-slot');
-  if (slot) {
-    const idx = Number(slot.dataset.index);
-    openModal(idx);
-  }
-});
-
-// MODAL SYSTEM
-function openModal(slotIndex = null) {
-  state.activeModalSlotIndex = slotIndex;
-  modalTitle.textContent = slotIndex !== null ? `NẠP MÃ GEN — ADN ${slotIndex + 1}` : "BỘ SƯU TẬP ALIEN";
-
-  const takenIds = new Set(state.selectedAliens.filter(Boolean).map(a => a.id));
-
-  modalGrid.innerHTML = ALIENS_DATA.map(alien => {
-    const isTaken = slotIndex !== null && takenIds.has(alien.id);
-    return `
-      <div class="modal-item ${isTaken ? 'modal-item--disabled' : ''}" data-id="${alien.id}">
-        <img src="${alien.image}" alt="${alien.name}" />
-        <span>${alien.name}</span>
-        <small>${alien.species}</small>
-      </div>
-    `;
-  }).join('');
-
-  modalOverlay.hidden = false;
-}
-
-modalGrid.addEventListener('click', (e) => {
-  const item = e.target.closest('.modal-item');
-  if (!item || item.classList.contains('modal-item--disabled')) return;
-
-  const id = Number(item.dataset.id);
+window.selectAlien = (id) => {
   const alien = ALIENS_DATA.find(a => a.id === id);
-
-  if (state.activeModalSlotIndex !== null) {
+  if(state.activeModalSlotIndex !== null) {
     state.selectedAliens[state.activeModalSlotIndex] = alien;
     renderDNAGrid();
-    modalOverlay.hidden = true;
-    showToast(`Đã nạp gen ${alien.name}!`);
-  } else {
-    showToast(`${alien.name} — Sức mạnh: ${alien.stats.power} | Tốc độ: ${alien.stats.speed}`);
+  }
+  document.getElementById('modalOverlay').hidden = true;
+};
+
+document.getElementById('btnModalClose').onclick = () => document.getElementById('modalOverlay').hidden = true;
+
+// 7. EVENT LISTENERS
+document.getElementById('btnCycleCore').addEventListener('click', () => {
+  const tabs = ['biomnitrix', 'ultimatrix', 'chaquetrix'];
+  const next = tabs[(tabs.indexOf(state.activeTab) + 1) % tabs.length];
+  switchTab(next);
+});
+
+DOM.tabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+
+// MODULE 3: Tính năng đăng nhập giả lập
+const modalSettings = document.getElementById('settingsModal');
+const modalName = document.getElementById('playerNameModal');
+
+document.getElementById('btnSettings').addEventListener('click', () => {
+  modalSettings.hidden = false;
+});
+document.getElementById('btnSettingsClose').addEventListener('click', () => {
+  modalSettings.hidden = true;
+});
+
+// Giả lập luồng đăng nhập Google
+document.getElementById('btnGoogleLogin').addEventListener('click', () => {
+  // Thay vì chuyển hướng thật, ta giả lập callback thành công, bật popup hỏi tên
+  modalSettings.hidden = true;
+  modalName.hidden = false;
+});
+
+document.getElementById('btnConfirmName').addEventListener('click', () => {
+  const inputName = document.getElementById('playerNameInput').value.trim();
+  if (inputName !== '') {
+    state.playerName = inputName;
+    updateHeaderSubtitle();
+    modalName.hidden = true;
+    
+    // Cập nhật giao diện nút đăng nhập
+    document.getElementById('btnGoogleLogin').hidden = true;
+    document.getElementById('playerProfileInfo').hidden = false;
   }
 });
 
-btnModalClose.addEventListener('click', () => modalOverlay.hidden = true);
-btnCollection.addEventListener('click', () => openModal(null));
-
-// PROCESS ACTION BUTTON (Dung Hợp / Tiến Hóa / Triệu Hồi)
-btnProcess.addEventListener('click', () => {
-  const selected = state.selectedAliens.filter(Boolean);
-
-  if (state.activeTab === 'biomnitrix') {
-    if (selected.length < 2) {
-      showToast("Cần tối thiểu 2 mã gen để dung hợp Biomnitrix!", true);
-      return;
-    }
-    const fusedName = selected.map(a => a.name.slice(0, Math.ceil(a.name.length / 2))).join('');
-    fusionResult.innerHTML = `
-      <h3>DUNG HỢP THÀNH CÔNG: ${fusedName}</h3>
-      <p>Chủng loài dung hợp đa hợp giữa ${selected.map(a => a.name).join(' + ')}.</p>
-      <div class="fusion-stats">
-        <span class="fusion-stat-chip">SỨC MẠNH: 9.5</span>
-        <span class="fusion-stat-chip">TỐC ĐỘ: 8.8</span>
-        <span class="fusion-stat-chip">KHÁNG CỰ: 9.0</span>
-      </div>
-    `;
-  } else if (state.activeTab === 'ultimatrix') {
-    if (selected.length < 1) {
-      showToast("Vui lòng chọn 1 Alien để kích hoạt Tiến Hóa!", true);
-      return;
-    }
-    fusionResult.innerHTML = `
-      <h3>ULTIMATE ${selected[0].name.toUpperCase()}</h3>
-      <p>Đã hoàn tất mô phỏng môi trường chiến tranh 1 triệu năm.</p>
-      <div class="fusion-stats">
-        <span class="fusion-stat-chip">TIẾN HÓA CẤP: MAX</span>
-        <span class="fusion-stat-chip">SỨC MẠNH x3.5</span>
-      </div>
-    `;
-  } else {
-    if (selected.length < 1) {
-      showToast("Vui lòng chọn 1 Alien để triệu hồi!", true);
-      return;
-    }
-    fusionResult.innerHTML = `
-      <h3>TRIỆU HỒI HAREM: ${selected[0].name}</h3>
-      <p>Tỉ lệ cơ thể đã điều chỉnh: ${state.bodyProportions}%. Trạng thái thân thiện: 100%.</p>
-    `;
-  }
-
-  fusionResult.hidden = false;
-  if (window.innerWidth <= 768) {
-    switchMobileView('result');
-  }
-  showToast("Thao tác hoàn tất thành công!");
+DOM.btnProcess.addEventListener('click', () => {
+  // MODULE 2: Update trạng thái radar
+  DOM.radarCoreStatus.textContent = "ĐANG HOẠT ĐỘNG";
+  DOM.radarCoreStatus.style.animation = "corePulse 0.5s ease-in-out infinite alternate";
+  
+  setTimeout(() => {
+    DOM.radarCoreStatus.style.animation = "none";
+  }, 2000);
 });
 
-// MODULE 1: MOBILE BOTTOM NAV LOGIC (Đổi Cột Trái / Cột Phải)
-function switchMobileView(view) {
-  state.mobileActiveView = view;
-  if (view === 'control') {
-    leftSidebar.classList.add('mobile-visible');
-    rightPanel.classList.remove('mobile-visible');
-    navBtnControl.classList.add('active');
-    navBtnResult.classList.remove('active');
-  } else {
-    leftSidebar.classList.remove('mobile-visible');
-    rightPanel.classList.add('mobile-visible');
-    navBtnControl.classList.remove('active');
-    navBtnResult.classList.add('active');
-  }
-}
-
-navBtnControl.addEventListener('click', () => switchMobileView('control'));
-navBtnResult.addEventListener('click', () => switchMobileView('result'));
-
-// Sound Beep Toàn Cục
-document.addEventListener('click', (e) => {
-  if (e.target.closest('button') || e.target.closest('.tab') || e.target.closest('.dna-slot')) {
-    playSciFiBeep();
-  }
-});
-
-btnArena.addEventListener('click', () => showToast("Đang kết nối Đấu Trường Villtrum..."));
-
-/* ==========================================================================
-   7. INITIALIZATION
-   ========================================================================== */
-function init() {
-  switchTab('biomnitrix');
-  if (window.innerWidth <= 768) {
-    switchMobileView('control');
-  }
-}
-
-init();
+// Init
+switchTab('biomnitrix');
