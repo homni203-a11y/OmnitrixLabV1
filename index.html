@@ -1,182 +1,223 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omnitrix Lab - Hệ Thống Lai Tạo</title>
-    <!-- Đảm bảo tên file CSS khớp với máy bạn -->
-    <link rel="stylesheet" href="style.css"> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lõi Omnitrix - Hệ Thống Nâng Cấp Cao Cấp</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
-<body>
-    <!-- GLOBAL BACKGROUND -->
-    <div class="global-bg" aria-hidden="true">
-        <div class="global-grid"></div>
-        <div class="global-radar">
-            <div class="g-ring g-ring-outer"></div>
-            <div class="g-ring g-ring-inner"></div>
+<body class="theme-biomnitrix">
+  <!-- GLOBAL BACKGROUND -->
+  <div class="global-bg" aria-hidden="true">
+    <div class="global-grid"></div>
+    <div class="global-radar">
+      <div class="g-ring g-ring-outer"></div>
+      <div class="g-ring g-ring-inner"></div>
+    </div>
+  </div>
+
+  <div id="app" class="app-shell">
+    <!-- APP HEADER: LOGO TRÁI & 4 NÚT PHẢI (RESPONSIVE) -->
+    <header class="app-header">
+      <div class="brand" id="brandContainer">
+        <div class="brand-icon-wrap" id="brandIconWrap">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
         </div>
+        <div class="brand-text">
+          <h1 class="brand-title" id="brandTitle">BIOMNITRIX</h1>
+          <p class="brand-subtitle" id="brandSubtitle">USER_ID // Ben Tennyson</p>
+        </div>
+      </div>
+
+      <!-- CỤM 4 NÚT TÍNH NĂNG GÓC PHẢI -->
+      <div class="top-right-actions">
+        <!-- Nút 1: Cài đặt -->
+        <button type="button" class="btn-action btn-icon-only" aria-label="Cài đặt" title="Cài đặt">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+
+        <!-- Nút 2: Đấu trường -->
+        <button type="button" class="btn-action" id="btnArena" title="Đấu trường">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 17.5L3 6V3h3l11.5 11.5"></path>
+            <path d="M13 19l6-6"></path>
+            <path d="M16 16l4 4"></path>
+            <path d="M19 21l2-2"></path>
+            <path d="M9.5 6.5L21 18v3h-3L6.5 9.5"></path>
+            <path d="M5 11l-2 2"></path>
+            <path d="M8 8l-4 4"></path>
+            <path d="M3 21l2-2"></path>
+          </svg>
+          <span class="btn-text">ĐẤU TRƯỜNG</span>
+        </button>
+
+        <!-- Nút 3: Bộ sưu tập -->
+        <button type="button" class="btn-action" id="btnCollection" title="Bộ sưu tập">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="btn-text">BỘ SƯU TẬP</span>
+        </button>
+
+        <!-- Nút 4: Đổi lõi vũ trụ -->
+        <button type="button" class="btn-action" id="btnCycleCore" title="Đổi Lõi Vũ Trụ">
+          <svg class="icon-colored" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6"></path>
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+            <path d="M3 22v-6h6"></path>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+          </svg>
+          <span class="btn-text">ĐỔI LÕI VŨ TRỤ</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- THÂN ỨNG DỤNG (GRID 2 CỘT) -->
+    <div class="app-body">
+      <!-- CỘT TRÁI: BẢNG ĐIỀU KHIỂN SIDEBAR -->
+      <aside class="sidebar mobile-visible" id="leftSidebar">
+        <!-- thanh Tab chuyển đổi Lõi -->
+        <nav class="tabs" role="tablist">
+          <button type="button" class="tab tab-active" role="tab" data-tab="biomnitrix">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            BIOMNITRIX
+          </button>
+
+          <button type="button" class="tab" role="tab" data-tab="ultimatrix">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            ULTIMATRIX
+          </button>
+
+          <button type="button" class="tab" role="tab" data-tab="chaquetrix">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            CHAQUETRIX
+          </button>
+        </nav>
+
+        <!-- PANEL ĐIỀU KHIỂN CHÍNH -->
+        <section class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title" id="panelTitle">
+              <span class="panel-title-icon" aria-hidden="true">✦</span>CHUỖI GEN ĐA HỢP
+            </h2>
+            <div class="panel-controls">
+              <!-- Nút Xúc Xắc Nâng Cấp -->
+              <button type="button" class="icon-btn btn-dice" id="btnDice" title="Ngẫu nhiên hóa">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                  <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+                  <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/>
+                  <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                  <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/>
+                  <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/>
+                </svg>
+              </button>
+              <!-- Stepper Tăng Giảm Số Ô ADN -->
+              <div class="stepper" id="slotStepper">
+                <button type="button" class="stepper-btn" id="btnSlotMinus">-</button>
+                <span class="stepper-value" id="slotCountDisplay">2</span>
+                <button type="button" class="stepper-btn" id="btnSlotPlus">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LƯỚI ADN SLOTS -->
+          <div class="dna-grid" id="dnaGrid"></div>
+
+          <!-- MENU PHỤ RENDER ĐỘNG DÀNH RIÊNG CHO TỪNG TAB -->
+          <div class="subpanel-container" id="subpanelContainer"></div>
+        </section>
+
+        <!-- NÚT THỰC THI ACTION -->
+        <button type="button" class="process-btn" id="btnProcess">
+          <svg id="btnProcessIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 17 22 12"></polyline>
+          </svg>
+          <span id="btnProcessText">DUNG HỢP ADN</span>
+        </button>
+      </aside>
+
+      <!-- CỘT PHẢI: MÀN HÌNH HIỂN THỊ KẾT QUẢ / RADAR -->
+      <main class="main-view mobile-hidden" id="rightPanel">
+        <!-- KẾT QUẢ HIỂN THỊ -->
+        <div id="fusionResult" class="fusion-card" hidden></div>
+
+        <!-- HIỂN THỊ RADAR CORE -->
+        <div class="radar-wrap" id="radarWrap">
+          <div class="radar-core" id="radarCore">
+            <div class="radar-core-glow"></div>
+            <div class="radar-core-base"></div>
+            <div class="radar-core-icon" id="radarCoreIcon">
+              <svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="currentColor" stroke-width="1.4">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 17 22 12"></polyline>
+              </svg>
+            </div>
+            <div class="radar-core-status" id="radarCoreStatus">ĐANG HOẠT ĐỘNG</div>
+          </div>
+        </div>
+      </main>
     </div>
 
-    <div id="app" class="app-shell">
-        <!-- APP HEADER -->
-        <header class="app-header">
-            <div class="brand" id="brandContainer">
-                <div class="brand-icon-wrap" id="brandIconWrap">
-                    <svg id="brandIconSvg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
-                        <line x1="12" y1="22" x2="12" y2="15.5"></line>
-                        <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
-                        <polyline points="2 15.5 12 8.5 22 15.5"></polyline>
-                        <line x1="12" y1="2" x2="12" y2="8.5"></line>
-                    </svg>
-                </div>
-                <div class="brand-text">
-                    <h1 class="brand-title" id="brandTitle">BIOMNITRIX</h1>
-                    <p class="brand-subtitle" id="brandSubtitle">USER_ID // Ben Tennyson</p>
-                </div>
-            </div>
-            
-            <div class="header-actions">
-                <button class="icon-btn" title="Cài đặt hệ thống">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                    </svg>
-                </button>
-                <button class="btn btn-outline" title="Đổi lõi">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-                        <path d="M21.5 2v6h-6M2.13 15.57a10 10 0 1 0 3.43-5.57L2 12"></path>
-                    </svg>
-                    ĐỔI LÕI
-                </button>
-            </div>
+    <!-- MOBILE BOTTOM NAVIGATION BAR -->
+    <nav class="mobile-bottom-nav" aria-label="Thanh điều hướng di động">
+      <button type="button" class="mobile-nav-btn active" id="navBtnControl">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="21" x2="4" y2="14"></line>
+          <line x1="4" y1="10" x2="4" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12" y2="3"></line>
+          <line x1="20" y1="21" x2="20" y2="16"></line>
+          <line x1="20" y1="12" x2="20" y2="3"></line>
+          <line x1="1" y1="14" x2="7" y2="14"></line>
+          <line x1="9" y1="8" x2="15" y2="8"></line>
+          <line x1="17" y1="16" x2="23" y2="16"></line>
+        </svg>
+        <span>Điều Khiển</span>
+      </button>
+      <button type="button" class="mobile-nav-btn" id="navBtnResult">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        <span>Kết Quả</span>
+      </button>
+    </nav>
+
+    <!-- MODAL CHỌN ALIEN / BỘ SƯU TẬP -->
+    <div id="modalOverlay" class="modal-overlay" hidden>
+      <div class="modal-container">
+        <header class="modal-header">
+          <h3 id="modalTitle">NẠP MÃ GEN ALIEN</h3>
+          <button type="button" class="modal-close-btn" id="btnModalClose">&times;</button>
         </header>
-
-        <!-- MAIN LAYOUT -->
-        <main class="app-main">
-            <!-- SIDEBAR NAV -->
-            <nav class="system-nav">
-                <button class="nav-btn active" data-core="biomnitrix">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
-                    </svg>
-                    BIOMNITRIX
-                </button>
-                <button class="nav-btn" data-core="ultimatrix">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                    </svg>
-                    ULTIMATRIX
-                </button>
-                <button class="nav-btn" data-core="chaquetrix">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                    CHAQUETRIX
-                </button>
-            </nav>
-
-            <div class="main-content">
-                <!-- PANEL TRÁI: ĐIỀU KHIỂN GEN -->
-                <aside class="control-panel scrollable">
-                    <div class="panel-section">
-                        <div class="section-header">
-                            <h2 class="section-title">
-                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                                CHUỖI GEN ĐA HỢP
-                            </h2>
-                            <!-- NÚT RANDOM ALIEN ĐƯỢC KHÔI PHỤC -->
-                            <button class="icon-btn small" id="btnRandom" title="Ngẫu nhiên (Random)">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><circle cx="15.5" cy="15.5" r="1.5"></circle><circle cx="15.5" cy="8.5" r="1.5"></circle><circle cx="8.5" cy="15.5" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle></svg>
-                            </button>
-                        </div>
-                        
-                        <div class="dna-slots-container">
-                            <div class="dna-slot" id="slotAdn1">
-                                <div class="slot-label">ADN 1</div>
-                                <div class="slot-content">
-                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
-                                    <span>NẠP MÃ GEN</span>
-                                </div>
-                            </div>
-                            <div class="dna-slot" id="slotAdn2">
-                                <div class="slot-label">ADN 2</div>
-                                <div class="slot-content">
-                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
-                                    <span>NẠP MÃ GEN</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- KHÔI PHỤC TÙY CHỌN SỐ LƯỢNG ALIEN LAI TẠO -->
-                    <div class="panel-section" id="alienQuantitySection">
-                        <div class="section-header">
-                            <h2 class="section-title">SỐ LƯỢNG ALIEN LAI TẠO</h2>
-                        </div>
-                        <div class="quantity-selector" style="display: flex; gap: 10px; margin-top: 10px;">
-                            <input type="number" id="alienQuantity" value="2" min="2" max="5" class="input-quantity" style="background: transparent; border: 1px solid #2bfca6; color: #fff; padding: 5px 10px; border-radius: 4px; width: 60px;">
-                            <span style="color: #6c757d; font-size: 12px; align-self: center;">(Tối thiểu 2)</span>
-                        </div>
-                    </div>
-
-                    <div class="panel-section">
-                        <div class="section-header">
-                            <h2 class="section-title">CẤU TRÚC GEN CHÍNH / PHỤ</h2>
-                        </div>
-                        <div class="structure-toggles">
-                            <button class="toggle-btn active" id="btnMainBody">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                CƠ THỂ CHÍNH (ADN 1)
-                            </button>
-                            <button class="toggle-btn" id="btnSubGene">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="none"><path d="M12 2.69l5.66 4.228L19.33 13H4.67l1.67 6.082L12 2.69z"></path></svg>
-                                GEN PHỤ (ADN 2)
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="panel-section">
-                        <div class="section-header">
-                            <h2 class="section-title">CÂN BẰNG ADN: <span id="balanceValue">50%</span></h2>
-                        </div>
-                        <input type="range" id="dnaBalance" min="0" max="100" value="50" class="slider">
-                    </div>
-
-                    <div class="panel-section">
-                        <div class="section-header">
-                            <h2 class="section-title">KIỂM SOÁT BẤT ỔN GEN</h2>
-                        </div>
-                        <div class="stability-controls">
-                            <button class="stability-btn active" data-level="stable">ỔN ĐỊNH</button>
-                            <button class="stability-btn" data-level="unstable">BẤT ỔN</button>
-                            <button class="stability-btn" data-level="chaos">HỖN MANG</button>
-                        </div>
-                        <p class="stability-desc">Dung hợp an toàn, giữ vững lý trí.</p>
-                    </div>
-                </aside>
-
-                <!-- PANEL PHẢI: HIỂN THỊ CHÍNH -->
-                <section class="display-panel">
-                    <div class="core-display">
-                        <!-- ICON BIỂU TƯỢNG TRUNG TÂM ĐƯỢC CỐ ĐỊNH -->
-                        <div class="radar-core-wrap">
-                            <svg id="radarCoreSvg" class="radar-core" viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="#2bfca6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
-                                <line x1="12" y1="22" x2="12" y2="15.5"></line>
-                                <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
-                                <polyline points="2 15.5 12 8.5 22 15.5"></polyline>
-                                <line x1="12" y1="2" x2="12" y2="8.5"></line>
-                            </svg>
-                        </div>
-                        <h2 class="status-text">CHỜ KHỞI ĐỘNG</h2>
-                    </div>
-                </section>
-            </div>
-        </main>
+        <div class="modal-grid" id="modalGrid"></div>
+      </div>
     </div>
 
-    <!-- Đảm bảo tên file JS khớp với máy bạn -->
-    <script src="script.js"></script>
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast" hidden></div>
+  </div>
+
+  <script src="./script.js"></script>
 </body>
 </html>
