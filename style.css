@@ -1,143 +1,773 @@
+/* ==========================================================================
+   style.css — Lõi Omnitrix
+   Toàn bộ CSS thuần (không framework). Biến màu khai báo ở :root.
+   ========================================================================== */
+
 :root {
-    --bg-main: #0a0c10;
-    --bg-panel: #161a22;
-    --bg-card: #1c212b;
-    --bg-card-empty: #12151b;
-    --omnitrix-green: #1df2a5;
-    --omnitrix-green-dim: rgba(29, 242, 165, 0.15);
-    --border-color: #2b3340;
-    --border-active: #3e4a5c;
-    --text-primary: #e2e8f0;
-    --text-secondary: #8b949e;
-    --danger-red: #ff4d4f;
+  --bg: #0a0c10;
+  --panel: #161a22;
+  --panel-alt: #181c25;
+  --border: #2b3340;
+  --neon: #1df2a5;
+  --neon-dim: rgba(29, 242, 165, 0.35);
+  --neon-glow: rgba(29, 242, 165, 0.55);
+  --text-primary: #e2e8f0;
+  --text-secondary: #8b949e;
+  --danger: #ff5c5c;
+  --font-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
-body { background-color: var(--bg-main); color: var(--text-primary); height: 100vh; overflow: hidden; }
-
-/* LAYOUT */
-.app-container { display: grid; grid-template-columns: 480px 1fr; height: 100vh; }
-
-/* SIDEBAR */
-.sidebar { 
-    background-color: var(--bg-main); 
-    border-right: 1px solid var(--border-color); 
-    padding: 20px; 
-    display: flex; flex-direction: column; gap: 20px; 
-    overflow-y: auto; 
+* {
+  box-sizing: border-box;
 }
 
-/* HEADER */
-.app-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;}
-.logo { display: flex; align-items: center; gap: 12px; }
-.cpu-icon { width: 32px; height: 32px; filter: invert(70%) sepia(50%) saturate(300%) hue-rotate(100deg); }
-.logo h1 { color: var(--omnitrix-green); font-size: 1.2rem; letter-spacing: 2px; }
-.logo p { color: var(--text-secondary); font-size: 0.7rem; }
-.header-actions { display: flex; gap: 10px; }
-.btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
-.btn-outline:hover { color: var(--text-primary); border-color: var(--text-primary); }
-
-/* TABS */
-.mode-tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-.tab { 
-    background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-secondary);
-    padding: 12px 0; border-radius: 8px; font-size: 0.8rem; cursor: pointer; font-weight: bold; transition: 0.3s;
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
 }
-.tab-icon { font-size: 1.2rem; }
-.tab:hover { border-color: var(--text-primary); }
-.tab.active { border-color: var(--omnitrix-green); color: var(--omnitrix-green); box-shadow: 0 0 15px var(--omnitrix-green-dim); }
 
-/* PANEL CHUNG */
-.panel { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; }
-.panel__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.title-group { display: flex; align-items: center; gap: 8px; }
-.icon-stars { color: var(--omnitrix-green); }
-.sidebar__title { font-size: 0.9rem; color: var(--text-primary); letter-spacing: 1px; }
-
-/* ĐIỀU KHIỂN SLOT & XÚC XẮC */
-.sidebar__controls { display: flex; gap: 10px; align-items: center; }
-.btn-icon { background: transparent; border: 1px solid var(--border-active); color: var(--omnitrix-green); border-radius: 6px; width: 32px; height: 32px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.2s;}
-.btn-icon:hover { background: var(--omnitrix-green-dim); }
-.counter { display: flex; align-items: center; background: transparent; border: 1px solid var(--border-active); border-radius: 6px; overflow: hidden; }
-.counter-btn { background: transparent; border: none; color: var(--text-secondary); width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem; }
-.counter-btn:hover { color: var(--omnitrix-green); }
-.counter-value { color: var(--omnitrix-green); font-weight: bold; width: 20px; text-align: center; }
-
-/* GRID ADN CHÍNH */
-.dna-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-/* THẺ ADN (Trống & Đã có data) */
-.dna-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; position: relative; }
-.dna-card__header { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--omnitrix-green); font-weight: bold; margin-bottom: 10px; }
-.btn-close { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1rem; }
-.btn-close:hover { color: var(--danger-red); }
-
-/* Vùng chứa ảnh hoặc khung ngắm (Viewfinder) */
-.dna-card__box { 
-    height: 120px; border-radius: 6px; margin-bottom: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; background: #181d26; 
+button {
+  font-family: inherit;
+  cursor: pointer;
 }
-.dna-card__box img { width: 90%; height: 90%; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
-.dna-name { position: absolute; bottom: 5px; font-size: 0.8rem; color: var(--omnitrix-green); font-weight: bold; text-shadow: 0 0 5px #000; }
 
-/* Trạng thái trống (Khung ngắm) */
-.dna-card.empty { background: var(--bg-card-empty); border-color: #21262d; }
-.dna-card.empty .dna-card__header { color: var(--text-secondary); }
-.dna-card.empty .dna-card__box { background: transparent; border: 1px solid #1f242c; }
-/* Tạo 4 góc khung ngắm */
-.dna-card.empty .dna-card__box::before, .dna-card.empty .dna-card__box::after { content: ''; position: absolute; width: calc(100% - 10px); height: calc(100% - 10px); border: 2px solid transparent; pointer-events: none; }
-.dna-card.empty .dna-card__box::before { border-top-color: #3e4a5c; border-bottom-color: #3e4a5c; clip-path: polygon(0 0, 10% 0, 10% 100%, 0 100%, 0 0, 90% 0, 100% 0, 100% 100%, 90% 100%, 90% 10%); }
-.empty-icon { color: var(--text-secondary); font-size: 1.5rem; margin-bottom: 5px; }
-.empty-text { font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 1px; }
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
 
-/* Footer của Card */
-.dna-card__footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; color: var(--text-secondary); }
-.size-bars { display: flex; gap: 3px; }
-.size-bars .bar { width: 12px; height: 6px; background: #2a333f; border-radius: 2px; }
-.size-bars .bar.active { background: var(--omnitrix-green); box-shadow: 0 0 5px var(--omnitrix-green); }
+/* ==========================================================================
+   LAYOUT SHELL
+   ========================================================================== */
 
-/* KHO LƯU TRỮ */
-.inventory-panel { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-.panel__title-small { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px; }
-.inventory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; overflow-y: auto; padding-right: 5px; }
-.alien-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 5px; cursor: pointer; text-align: center; transition: 0.2s;}
-.alien-item:hover, .alien-item.selected { border-color: var(--omnitrix-green); background: var(--omnitrix-green-dim); }
-.alien-item img { width: 40px; height: 40px; object-fit: contain; }
-.alien-item span { display: block; font-size: 0.65rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px;}
+.app-shell {
+  display: grid;
+  grid-template-columns: 450px 1fr;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+}
 
-/* NÚT XỬ LÝ */
-.btn-process { background: #0f1c16; border: 1px solid var(--omnitrix-green); color: var(--omnitrix-green); padding: 15px; border-radius: 8px; font-weight: bold; letter-spacing: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; margin-top: auto;}
-.btn-process:hover:not(:disabled) { box-shadow: 0 0 20px var(--omnitrix-green-dim); background: #153326; }
-.btn-process:disabled { border-color: var(--border-color); color: var(--text-secondary); cursor: not-allowed; background: var(--bg-panel); }
-.spinner { width: 16px; height: 16px; border: 2px solid transparent; border-top-color: var(--omnitrix-green); border-radius: 50%; animation: spin 1s linear infinite; }
-@keyframes spin { 100% { transform: rotate(360deg); } }
+/* ==========================================================================
+   SIDEBAR (CỘT TRÁI)
+   ========================================================================== */
 
-/* PHẦN HIỂN THỊ BÊN PHẢI (DISPLAY) */
-.main-display { position: relative; display: flex; align-items: center; justify-content: center; }
-.radar-background { position: absolute; width: 600px; height: 600px; opacity: 0.1; pointer-events: none; }
-.radar-circle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid var(--omnitrix-green); }
-.circle-1 { width: 100%; height: 100%; border-style: dashed; animation: spin 40s linear infinite; }
-.circle-2 { width: 60%; height: 60%; border: 2px solid var(--omnitrix-green); animation: spin 30s linear infinite reverse; }
-.radar-crosshair { position: absolute; top: 0; left: 50%; width: 1px; height: 100%; background: var(--omnitrix-green); transform: translateX(-50%); }
-.radar-crosshair::after { content: ''; position: absolute; top: 50%; left: -300px; width: 600px; height: 1px; background: var(--omnitrix-green); }
+.sidebar {
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 22px 26px;
+  gap: 18px;
+}
 
-.empty-state { text-align: center; color: var(--omnitrix-green); opacity: 0.5; }
-.dna-spinner { font-size: 3rem; animation: spin 5s linear infinite; margin-bottom: 10px; display: inline-block; }
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 
-.display-content { display: flex; gap: 30px; align-items: center; z-index: 10; width: 90%; }
-.info-panel { background: rgba(17,20,26,0.9); backdrop-filter: blur(5px); border: 1px solid var(--border-color); padding: 30px; border-radius: 16px; width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-.header-title { color: var(--omnitrix-green); letter-spacing: 2px; font-size: 0.9rem; margin-bottom: 20px;}
-.info-panel__id { color: var(--text-secondary); font-family: monospace; font-size: 0.8rem; }
-.alien-name-glowing { color: var(--omnitrix-green); font-size: 2.5rem; margin-bottom: 20px; text-shadow: 0 0 15px var(--omnitrix-green-dim); text-transform: uppercase; }
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.stat-box { background: #12151b; border: 1px solid var(--border-active); padding: 15px; border-radius: 8px; }
-.stat-label { font-size: 0.7rem; color: var(--text-secondary); display: block; margin-bottom: 8px; }
-.stat-value { font-size: 1.1rem; font-weight: bold; }
-.text-danger { color: var(--danger-red); }
-.text-green { color: var(--omnitrix-green); }
-.radar-box { grid-column: span 2; }
-.chart-container { height: 200px; width: 100%; }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-.white-canvas { background: #fff; width: 400px; height: 400px; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 20px rgba(0,0,0,0.2), 0 10px 30px rgba(0,0,0,0.8); }
-.alien-img-placeholder { width: 85%; height: 85%; object-fit: contain; mix-blend-mode: multiply; }
-.hidden { display: none !important; }
+.brand-icon {
+  color: var(--neon);
+  display: flex;
+  filter: drop-shadow(0 0 6px var(--neon-dim));
+}
+
+.brand-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--neon);
+  line-height: 1.1;
+}
+
+.brand-subtitle {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  color: var(--neon);
+  border-color: var(--neon);
+  box-shadow: 0 0 10px var(--neon-dim);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 10px 6px;
+  border-radius: 8px;
+  transition: all 0.18s ease;
+}
+
+.tab:hover {
+  color: var(--text-primary);
+}
+
+.tab-active {
+  color: var(--neon);
+  border-color: var(--neon);
+  box-shadow: 0 0 14px var(--neon-dim);
+  background: rgba(29, 242, 165, 0.06);
+}
+
+/* Panel: Chuỗi Gen Đa Hợp */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-title-icon {
+  color: var(--neon);
+}
+
+.panel-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+
+.icon-btn:hover {
+  color: var(--neon);
+  border-color: var(--neon);
+  box-shadow: 0 0 10px var(--neon-dim);
+}
+
+.icon-btn:active {
+  transform: rotate(25deg);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stepper-btn {
+  width: 28px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 700;
+  transition: all 0.18s ease;
+}
+
+.stepper-btn:hover:not(:disabled) {
+  color: var(--neon);
+  background: rgba(29, 242, 165, 0.08);
+}
+
+.stepper-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.stepper-value {
+  min-width: 26px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--neon);
+}
+
+/* Grid ADN */
+.dna-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.dna-slot {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  transition: all 0.2s ease;
+}
+
+/* ---- Trạng thái 1: Ô trống ---- */
+.dna-slot--empty {
+  border: 1px dashed var(--border);
+  background: rgba(255, 255, 255, 0.01);
+  cursor: pointer;
+}
+
+.dna-slot--empty:hover {
+  border-color: var(--neon-dim);
+}
+
+.slot-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--neon);
+  letter-spacing: 0.4px;
+  z-index: 2;
+}
+
+.slot-viewfinder {
+  position: absolute;
+  inset: 26px 10px 40px 10px;
+}
+
+.corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--neon-dim);
+  border-style: solid;
+  border-width: 0;
+}
+.corner--tl {
+  top: 0;
+  left: 0;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+.corner--tr {
+  top: 0;
+  right: 0;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+.corner--bl {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+.corner--br {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+.slot-empty-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.slot-empty-arrow {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.slot-empty-text {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--text-secondary);
+}
+
+.slot-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.slot-size {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+}
+
+.slot-size strong {
+  color: var(--neon);
+  font-size: 9px;
+}
+
+.slot-size-blocks {
+  display: flex;
+  gap: 2px;
+}
+
+.size-block {
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--border);
+}
+
+.size-block--active {
+  background: var(--neon);
+}
+
+/* ---- Trạng thái 2: Ô đã có Alien ---- */
+.dna-slot--filled {
+  border: 1px solid var(--neon);
+  background: rgba(29, 242, 165, 0.04);
+  box-shadow: 0 0 16px var(--neon-dim);
+}
+
+.slot-filled-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.slot-alien-name {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--neon);
+  letter-spacing: 0.3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slot-remove-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.slot-remove-btn:hover {
+  color: var(--danger);
+  background: rgba(255, 92, 92, 0.1);
+}
+
+.slot-alien-image-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot-alien-image {
+  max-width: 78%;
+  max-height: 78%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px var(--neon-dim));
+}
+
+/* Nút xử lý */
+.process-btn {
+  margin-top: auto;
+  width: 100%;
+  background: rgba(29, 242, 165, 0.08);
+  border: 1px solid var(--neon);
+  color: var(--neon);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 14px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.process-btn:hover {
+  background: rgba(29, 242, 165, 0.16);
+  box-shadow: 0 0 22px var(--neon-dim);
+}
+
+.process-btn:active {
+  transform: scale(0.99);
+}
+
+/* ==========================================================================
+   MAIN VIEW (CỘT PHẢI)
+   ========================================================================== */
+
+.main-view {
+  position: relative;
+  background: var(--bg);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(29, 242, 165, 0.16) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.radar-wrap {
+  position: relative;
+  width: min(60vh, 520px);
+  height: min(60vh, 520px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radar-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px dashed var(--neon);
+  opacity: 0.55;
+  animation: spin 16s linear infinite;
+}
+
+.radar-ring--outer {
+  inset: 40px;
+  opacity: 0.3;
+  animation-duration: 24s;
+  animation-direction: reverse;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dna-core {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dna-core-emoji {
+  font-size: 96px;
+  animation: float 3.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 24px var(--neon-glow));
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-18px);
+  }
+}
+
+.fusion-result {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel);
+  border: 1px solid var(--neon);
+  box-shadow: 0 0 24px var(--neon-dim);
+  border-radius: 12px;
+  padding: 16px 22px;
+  min-width: 280px;
+  text-align: center;
+}
+
+.fusion-result h3 {
+  margin: 0 0 6px;
+  color: var(--neon);
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+.fusion-result p {
+  margin: 2px 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.fusion-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.fusion-stat-chip {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 10.5px;
+  color: var(--text-primary);
+}
+
+.fusion-stat-chip strong {
+  color: var(--neon);
+}
+
+/* ==========================================================================
+   MODAL (KHO ALIEN)
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 24px;
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal {
+  width: min(640px, 100%);
+  max-height: 80vh;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  color: var(--neon);
+}
+
+.modal-close {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  font-size: 12px;
+  transition: all 0.15s ease;
+}
+
+.modal-close:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.modal-item {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-align: center;
+}
+
+.modal-item:hover {
+  border-color: var(--neon);
+  box-shadow: 0 0 14px var(--neon-dim);
+  transform: translateY(-2px);
+}
+
+.modal-item img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.modal-item span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modal-item small {
+  font-size: 9.5px;
+  color: var(--text-secondary);
+}
+
+.modal-item--disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.modal-item--disabled:hover {
+  border-color: var(--border);
+  box-shadow: none;
+  transform: none;
+}
+
+/* ==========================================================================
+   TOAST
+   ========================================================================== */
+
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel-alt);
+  border: 1px solid var(--neon);
+  color: var(--text-primary);
+  font-size: 12.5px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px var(--neon-dim);
+  z-index: 100;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast[hidden] {
+  display: none;
+}
+
+.toast--error {
+  border-color: var(--danger);
+  box-shadow: 0 0 20px rgba(255, 92, 92, 0.35);
+}
+
+/* ==========================================================================
+   RESPONSIVE (thu nhỏ tối thiểu để không vỡ layout trên màn hẹp)
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+    min-height: 100vh;
+  }
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    max-height: 60vh;
+  }
+  .main-view {
+    min-height: 40vh;
+  }
+}
