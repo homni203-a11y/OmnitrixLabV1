@@ -1,5 +1,5 @@
 /* ==========================================================================
-   CSS VARIABLES & THEMES ENGINE
+   CSS VARIABLES & THEME ENGINE (BIOMNITRIX, ULTIMATRIX, CHAQUETRIX)
    ========================================================================== */
 :root {
   --bg: #0a0c10;
@@ -10,7 +10,7 @@
   --text-secondary: #8b949e;
   --font-main: "Segoe UI", system-ui, -apple-system, sans-serif;
 
-  /* Theme Mặc định: Biomnitrix (Neon Green) */
+  /* Theme Mặc định: Biomnitrix (Xanh Neon) */
   --theme-base: #1df2a5;
   --theme-dim: rgba(29, 242, 165, 0.35);
   --theme-glow: rgba(29, 242, 165, 0.55);
@@ -62,7 +62,7 @@ button {
 }
 
 /* ==========================================================================
-   BACKGROUND ANIMATION
+   BACKGROUND RADAR ANIMATION
    ========================================================================== */
 .global-bg {
   position: fixed;
@@ -128,7 +128,6 @@ button {
   overflow: hidden;
 }
 
-/* HEADER CHÍNH */
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -148,8 +147,8 @@ button {
 }
 
 .brand-icon-wrap {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 2px solid var(--theme-base);
   display: flex;
@@ -159,6 +158,12 @@ button {
   box-shadow: 0 0 12px var(--theme-dim);
   transition: all 0.3s ease;
   flex-shrink: 0;
+  padding: 6px;
+}
+
+.brand-icon-wrap svg {
+  width: 100%;
+  height: 100%;
 }
 
 .brand-title {
@@ -177,7 +182,6 @@ button {
   letter-spacing: 0.8px;
 }
 
-/* 4 NÚT ACTION TÍNH NĂNG TOP RIGHT */
 .top-right-actions {
   display: flex;
   align-items: center;
@@ -217,7 +221,7 @@ button {
 }
 
 /* ==========================================================================
-   BODY & 2 CỘT
+   APP BODY & SIDEBAR
    ========================================================================== */
 .app-body {
   display: flex;
@@ -226,7 +230,6 @@ button {
   position: relative;
 }
 
-/* SIDEBAR CỘT TRÁI */
 .sidebar {
   width: 440px;
   background: rgba(10, 12, 16, 0.85);
@@ -241,7 +244,7 @@ button {
   flex-shrink: 0;
 }
 
-/* TAB NAVIGATION */
+/* TABS */
 .tabs {
   display: flex;
   gap: 6px;
@@ -275,7 +278,7 @@ button {
   background: var(--theme-bg-subtle);
 }
 
-/* PANEL NỘI DUNG */
+/* PANEL & CONTROLS */
 .panel {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -313,7 +316,6 @@ button {
   gap: 8px;
 }
 
-/* NÚT XÚC XẮC (MICRO-INTERACTION) */
 .icon-btn {
   width: 34px;
   height: 34px;
@@ -341,7 +343,6 @@ button {
   transition: transform 0.2s ease;
 }
 
-/* Keyframes rung lắc toàn bộ khuôn nút Xúc Xắc */
 @keyframes diceShake {
   0% { transform: rotate(0deg) scale(1); }
   20% { transform: rotate(-14deg) scale(0.92); }
@@ -355,7 +356,6 @@ button {
   animation: diceShake 0.3s ease-in-out;
 }
 
-/* STEPPER */
 .stepper {
   display: flex;
   align-items: center;
@@ -483,13 +483,13 @@ button {
 }
 
 .slot-alien-image {
-  max-width: 80%;
-  max-height: 80%;
+  max-width: 85%;
+  max-height: 85%;
   object-fit: contain;
-  filter: drop-shadow(0 0 8px var(--theme-dim));
+  filter: drop-shadow(0 0 10px var(--theme-dim));
 }
 
-/* SUBPANELS ĐỘNG CỦA ULTIMATRIX VÀ CHAQUETRIX */
+/* SUBPANEL CARDS */
 .subpanel-container {
   display: flex;
   flex-direction: column;
@@ -548,7 +548,6 @@ button {
   color: var(--text-primary);
 }
 
-/* SLIDER TỈ LỆ CƠ THỂ CHAQUETRIX */
 .range-group {
   display: flex;
   flex-direction: column;
@@ -568,7 +567,7 @@ button {
   cursor: pointer;
 }
 
-/* NÚT THỰC THI (ACTION BUTTON) */
+/* PROCESS ACTION BUTTON */
 .process-btn {
   margin-top: auto;
   width: 100%;
@@ -595,7 +594,7 @@ button {
 }
 
 /* ==========================================================================
-   MAIN VIEW (CỘT PHẢI & RADAR)
+   MAIN VIEW & OMNITRIX RADAR CORE
    ========================================================================== */
 .main-view {
   position: relative;
@@ -655,7 +654,7 @@ button {
   border-radius: 6px;
 }
 
-/* RADAR CORE */
+/* RADAR CORE HIỂN THỊ ICON OMNITRIX ĐỒNG HỒ CÁT */
 .radar-wrap {
   position: relative;
   width: min(55vh, 420px);
@@ -684,8 +683,8 @@ button {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 240px;
-  height: 240px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--theme-glow) 0%, var(--theme-dim) 40%, transparent 75%);
   animation: corePulse 2s ease-in-out infinite alternate;
@@ -707,33 +706,45 @@ button {
   height: 140px;
   border-radius: 50%;
   background: var(--bg);
-  border: 2px solid var(--border);
+  border: 2px solid var(--theme-base);
+  box-shadow: inset 0 0 15px var(--theme-dim), 0 0 15px var(--theme-dim);
   z-index: 2;
 }
 
+/* Kích thước vừa vặn 72px x 72px chuẩn cho Icon OMNITRIX */
 .radar-core-icon {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 72px;
+  height: 72px;
   color: var(--theme-base);
   z-index: 3;
-  filter: drop-shadow(0 0 15px var(--theme-dim));
+  filter: drop-shadow(0 0 12px var(--theme-dim));
   display: flex;
+  align-items: center;
+  justify-content: center;
   transition: color 0.3s ease;
+}
+
+.radar-core-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .radar-core-status {
   position: absolute;
-  top: calc(50% + 85px);
+  top: calc(50% + 90px);
   left: 50%;
   transform: translateX(-50%);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 3px;
   color: var(--theme-base);
   z-index: 4;
   white-space: nowrap;
+  text-shadow: 0 0 8px var(--theme-dim);
 }
 
 /* ==========================================================================
@@ -749,7 +760,7 @@ button {
   backdrop-filter: blur(16px);
   border-top: 1px solid var(--border);
   z-index: 1000;
-  display: none; /* Chỉ hiện trên di động */
+  display: none;
   justify-content: space-around;
   align-items: center;
 }
@@ -857,8 +868,8 @@ button {
 }
 
 .modal-item img {
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   object-fit: contain;
 }
 
@@ -873,7 +884,6 @@ button {
   color: var(--text-secondary);
 }
 
-/* TOAST */
 .toast {
   position: fixed;
   bottom: 80px;
@@ -896,10 +906,9 @@ button {
 }
 
 /* ==========================================================================
-   MOBILE RESPONSIVE RULES (@media max-width: 768px)
+   MOBILE RESPONSIVE
    ========================================================================== */
 @media (max-width: 768px) {
-  /* Fix Header & 4 nút không bao giờ bị đè */
   .app-header {
     padding: 10px 12px;
   }
@@ -909,8 +918,9 @@ button {
   }
 
   .brand-icon-wrap {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
+    padding: 4px;
   }
 
   .brand-title {
@@ -921,7 +931,6 @@ button {
     font-size: 9px;
   }
 
-  /* MODULE 1: Ẩn chữ của 4 nút tính năng trên Mobile, giảm padding tối đa */
   .top-right-actions {
     gap: 4px;
   }
@@ -934,17 +943,16 @@ button {
   }
 
   .btn-action .btn-text {
-    display: none !important; /* Ẩn chữ hoàn toàn */
+    display: none !important;
   }
 
   .btn-icon-only {
     padding: 6px 8px;
   }
 
-  /* Chuyển Layout sang dạng ẩn/hiện 2 cột độc lập */
   .app-body {
     position: relative;
-    padding-bottom: 56px; /* Để dành chỗ cho Bottom Nav */
+    padding-bottom: 56px;
   }
 
   .sidebar {
@@ -970,7 +978,6 @@ button {
     display: flex;
   }
 
-  /* Kích hoạt Bottom Nav trên di động */
   .mobile-bottom-nav {
     display: flex;
   }
