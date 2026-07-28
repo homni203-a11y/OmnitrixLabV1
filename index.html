@@ -3,179 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lõi Omnitrix - Báo Cáo Mã Gen</title>
+    <title>Lõi Omnitrix - Biomnitrix</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
         
         <!-- CỘT TRÁI: BẢNG ĐIỀU KHIỂN (SIDEBAR) -->
         <aside class="sidebar">
-            <header class="sidebar__header">
-                <div class="icon-stars">✦</div>
-                <h2 class="sidebar__title">CHUỖI GEN ĐA HỢP</h2>
-                <div class="sidebar__controls">
-                    <button class="btn-icon">🎲</button>
-                    <div class="counter">
-                        <span>-</span>
-                        <span>2</span>
-                        <span>+</span>
+            
+            <header class="app-header">
+                <div class="logo">
+                    <img src="./cpu.png" alt="CPU Core" class="cpu-icon">
+                    <div>
+                        <h1>LÕI OMNITRIX</h1>
+                        <p>USER_ID // TENNYSON</p>
                     </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-outline">ĐẤU TRƯỜNG</button>
+                    <button class="btn-outline">BỘ SƯU TẬP</button>
                 </div>
             </header>
 
-            <!-- Khung chọn ADN -->
-            <section class="dna-selection">
-                <article class="dna-card">
-                    <div class="dna-card__header">
-                        <span>ADN 1</span>
-                        <button class="btn-close">×</button>
-                    </div>
-                    <div class="dna-card__image-box">
-                        <!-- Placeholder cho Mucilator -->
-                        <div class="img-placeholder" style="background-image: linear-gradient(to top, #1a2a3a, transparent);">
-                            <span style="color: #6d8ba6; font-size: 3rem;">👽</span>
-                        </div>
-                        <h3 class="dna-card__name">MUCILATOR</h3>
-                    </div>
-                    <div class="dna-card__footer">
-                        <span class="icon-expand">⛶ SIZE</span>
-                        <div class="size-bars">
-                            <div class="bar active"></div><div class="bar active"></div>
-                            <div class="bar active"></div><div class="bar active highlight"></div>
-                            <div class="bar"></div>
-                        </div>
-                        <span class="size-label">LỚN</span>
-                    </div>
-                </article>
-
-                <article class="dna-card">
-                    <div class="dna-card__header">
-                        <span>ADN 2</span>
-                        <button class="btn-close">×</button>
-                    </div>
-                    <div class="dna-card__image-box">
-                        <!-- Placeholder cho Astrodactyl -->
-                        <div class="img-placeholder" style="background-image: linear-gradient(to top, #3a221a, transparent);">
-                            <span style="color: #a66d53; font-size: 3rem;">🦖</span>
-                        </div>
-                        <h3 class="dna-card__name" style="color: var(--omnitrix-green);">ASTRODACTYL</h3>
-                    </div>
-                    <div class="dna-card__footer">
-                        <span class="icon-expand">⛶ SIZE</span>
-                        <div class="size-bars">
-                            <div class="bar active"></div><div class="bar active"></div>
-                            <div class="bar active highlight"></div><div class="bar"></div>
-                            <div class="bar"></div>
-                        </div>
-                        <span class="size-label" style="color: var(--omnitrix-green);">B.THƯỜNG</span>
-                    </div>
-                </article>
-            </section>
-
-            <div class="divider">
-                <span>⟳ CÂN BẰNG ĐA GEN TỰ ĐỘNG (5 DNA)</span>
+            <!-- TABS MODULE -->
+            <div class="mode-tabs">
+                <button class="tab">
+                    <span class="tab-icon">⚡</span> ULTIMATE
+                </button>
+                <button class="tab active">
+                    <span class="tab-icon">📚</span> BIOMNITRIX
+                </button>
+                <button class="tab">
+                    <span class="tab-icon">♡</span> CHAQUETRIX
+                </button>
             </div>
 
-            <!-- Kiểm soát gen -->
-            <section class="mutation-control">
-                <h3 class="control-title"><span class="icon-wave">((o))</span> KIỂM SOÁT BẤT ỔN GEN</h3>
-                <div class="toggle-group">
-                    <button class="toggle-btn active">ỔN ĐỊNH</button>
-                    <button class="toggle-btn">BẤT ỔN</button>
-                    <button class="toggle-btn">HỖN MANG</button>
-                </div>
-                <p class="control-desc">Giữ nguyên cấu trúc gốc, ốp giáp/màu sắc, chân thực cao.</p>
-            </section>
+            <div class="panel">
+                <header class="panel__header">
+                    <div class="title-group">
+                        <span class="icon-stars">✦</span>
+                        <h2 class="sidebar__title">CHUỖI GEN ĐA HỢP</h2>
+                    </div>
+                    <div class="sidebar__controls">
+                        <!-- Nút Random -->
+                        <button class="btn-icon" id="btn-random" title="Chọn ngẫu nhiên">⚁</button>
+                        <!-- Điều chỉnh số lượng (2-5) -->
+                        <div class="counter">
+                            <button class="counter-btn" id="btn-decrease">−</button>
+                            <span id="slot-count-display" class="counter-value">2</span>
+                            <button class="counter-btn" id="btn-increase">+</button>
+                        </div>
+                    </div>
+                </header>
 
-            <!-- Nút xử lý -->
-            <button class="btn-process">
-                <span class="spinner"></span> ĐANG XỬ LÝ...
+                <!-- KHU VỰC CHỨA CÁC THẺ ADN -->
+                <section class="dna-grid" id="fusion-slots">
+                    <!-- JS sẽ render thẻ tại đây -->
+                </section>
+            </div>
+
+            <!-- Kho chọn Alien -->
+            <div class="panel inventory-panel">
+                <h3 class="panel__title-small">KHO LƯU TRỮ ALIEN</h3>
+                <div id="alien-grid" class="inventory-grid">
+                    <!-- JS sẽ render kho tại đây -->
+                </div>
+            </div>
+
+            <button class="btn-process" id="fuse-btn">
+                <span class="spinner" id="fuse-spinner" style="display:none;"></span> 
+                <span id="fuse-text">BẮT ĐẦU DUNG HỢP</span>
             </button>
         </aside>
 
         <!-- CỘT PHẢI: MÀN HÌNH HIỂN THỊ CHÍNH -->
         <main class="main-display">
-            <!-- Hiệu ứng nền xoay -->
             <div class="radar-background">
                 <div class="radar-circle circle-1"></div>
                 <div class="radar-circle circle-2"></div>
                 <div class="radar-crosshair"></div>
             </div>
 
-            <!-- Thanh điều hướng bên phải -->
-            <nav class="side-nav">
-                <button class="nav-btn active"><span>∿</span></button>
-                <button class="nav-btn"><span>◎</span></button>
-                <button class="nav-btn"><span>⌖</span></button>
-                <button class="nav-btn warning"><span>⚠</span></button>
-            </nav>
+            <!-- UI Trống ban đầu -->
+            <div id="empty-state" class="empty-state">
+                <div class="dna-spinner">🧬</div>
+                <p>ĐANG CHỜ MÃ GEN...</p>
+            </div>
 
-            <!-- Khu vực nội dung nổi -->
-            <div class="display-content">
-                
-                <!-- Bảng báo cáo thông số -->
+            <!-- Kết quả dung hợp -->
+            <div class="display-content hidden" id="result-content">
                 <section class="info-panel">
                     <header class="info-panel__header">
                         <div class="header-title">
                             <span class="icon-pulse">∿</span> BÁO CÁO MÃ GEN
                         </div>
-                        <div class="header-actions">
-                            <button class="btn-small">⧉</button>
-                            <button class="btn-small">✕</button>
-                        </div>
                     </header>
                     
-                    <div class="info-panel__id">[ MÃ ĐỊNH DANH GEN: ASTROMUC-001 ]</div>
-                    
-                    <!-- Text Omnitrix phát sáng chuẩn màu -->
-                    <h1 class="alien-name-glowing">ASTROMUCILATOR</h1>
+                    <div class="info-panel__id">[ MÃ ĐỊNH DANH GEN: <span id="res-id">UNKNOWN</span> ]</div>
+                    <h1 class="alien-name-glowing" id="res-name">TÊN ALIEN</h1>
 
                     <div class="stats-grid">
                         <div class="stat-box">
                             <span class="stat-label">CẤP ĐỘ ĐE DỌA</span>
-                            <div class="stat-value text-danger">NGUY HIỂM<br>(MỨC ĐỘ CAO)</div>
+                            <div class="stat-value text-danger" id="res-danger">NGUY HIỂM</div>
                         </div>
-                        
                         <div class="stat-box">
-                            <span class="stat-label">CHỈ SỐ CHIẾN ĐẤU (PL)</span>
-                            <div class="stat-value text-green" style="font-size: 2rem;">80</div>
+                            <span class="stat-label">HỆ GEN GỐC</span>
+                            <div class="stat-value text-green" id="res-type" style="font-size: 1rem;">-</div>
                         </div>
-                        
                         <div class="stat-box radar-box">
                             <span class="stat-label">∿ MA TRẬN CHỈ SỐ</span>
-                            <!-- Mô phỏng biểu đồ radar bằng CSS -->
-                            <div class="radar-chart-mockup">
-                                <div class="hexagon-bg"></div>
-                                <div class="hexagon-value"></div>
-                                <span class="chart-label lbl-top">SỨC MẠNH</span>
-                                <span class="chart-label lbl-tr">TỐC ĐỘ</span>
-                                <span class="chart-label lbl-br">TRÍ TUỆ</span>
-                                <span class="chart-label lbl-bot">SỨC BỀN</span>
-                                <span class="chart-label lbl-bl">NĂNG LƯỢNG</span>
-                                <span class="chart-label lbl-tl">CHIẾN KỸ</span>
+                            <div class="chart-container">
+                                <canvas id="radar-chart"></canvas>
                             </div>
-                            <div class="radar-hint">⬈ NHẤN ĐỂ PHÂN TÍCH RADAR</div>
                         </div>
                     </div>
-
-                    <footer class="info-panel__footer">
-                        <span>PHÂN LOẠI AN TOÀN</span>
-                        <span class="text-green">RANK: NGUY HIỂM (A)</span>
-                    </footer>
                 </section>
 
-                <!-- Bục hiển thị hình ảnh Alien (White Box) -->
                 <section class="alien-stage">
                     <div class="white-canvas">
-                        <!-- Vị trí chèn ảnh thật của Alien -->
-                        <img src="https://via.placeholder.com/400x400/ffffff/000000?text=Alien+Image" alt="Astromucilator" class="alien-img-placeholder">
+                        <img id="res-image" src="" alt="Fusion Result" class="alien-img-placeholder">
                     </div>
                 </section>
-
             </div>
         </main>
-
     </div>
+    
+    <!-- Link file JS (Cần set type="module" nếu bạn dùng import/export trong file data.js) -->
+    <script type="module" src="./main.js"></script>
 </body>
 </html>
