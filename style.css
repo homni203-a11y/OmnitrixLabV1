@@ -1,6 +1,5 @@
 /* ==========================================================================
-   style.css — Lõi Omnitrix
-   Toàn bộ CSS thuần (không framework). Biến màu khai báo ở :root.
+   style.css — Lõi Omnitrix (Đã Tối Ưu)
    ========================================================================== */
 
 :root {
@@ -17,869 +16,272 @@
   --font-main: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
+html, body {
+  margin: 0; padding: 0;
+  width: 100%; min-height: 100vh;
   background: var(--bg);
   color: var(--text-primary);
   font-family: var(--font-main);
   -webkit-font-smoothing: antialiased;
 }
 
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
+button { font-family: inherit; cursor: pointer; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
+/* ==========================================================================
+   GLOBAL BACKGROUND & ROTATING RADAR
+   ========================================================================== */
+.global-bg {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: -1; pointer-events: none;
+  overflow: hidden;
   background: var(--bg);
 }
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
+
+.global-grid {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(29, 242, 165, 0.12) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.6;
+}
+
+.global-radar {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.g-ring {
+  position: absolute; border-radius: 50%;
+  border-style: dashed; border-color: var(--neon);
+}
+
+.g-ring-1 { width: 120vmax; height: 120vmax; border-width: 1.5px; opacity: 0.12; animation: spin 45s linear infinite; }
+.g-ring-2 { width: 85vmax; height: 85vmax; border-width: 2px; opacity: 0.2; animation: spin 30s linear infinite reverse; }
+.g-ring-3 { width: 50vmax; height: 50vmax; border-width: 1px; opacity: 0.35; animation: spin 20s linear infinite; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ==========================================================================
-   LAYOUT SHELL
+   LAYOUT SHELL (RESPONSIVE BASE)
    ========================================================================== */
-
 .app-shell {
-  display: grid;
-  grid-template-columns: 450px 1fr;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  width: 100%; min-height: 100vh;
+  background: transparent; 
+}
+
+@media (min-width: 901px) {
+  .app-shell {
+    display: grid;
+    grid-template-columns: 450px 1fr;
+    height: 100vh;
+    overflow: hidden;
+  }
 }
 
 /* ==========================================================================
    SIDEBAR (CỘT TRÁI)
    ========================================================================== */
-
 .sidebar {
-  background: var(--bg);
+  background: rgba(10, 12, 16, 0.85); 
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-right: 1px solid var(--border);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  padding: 22px 22px 26px;
-  gap: 18px;
+  overflow-y: auto; display: flex; flex-direction: column;
+  padding: 22px 22px 26px; gap: 18px; z-index: 10;
 }
 
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
+.sidebar-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-icon { color: var(--neon); display: flex; filter: drop-shadow(0 0 6px var(--neon-dim)); }
+.brand-title { margin: 0; font-size: 17px; font-weight: 800; letter-spacing: 0.5px; color: var(--neon); line-height: 1.1; }
+.brand-subtitle { margin: 2px 0 0; font-size: 11px; color: var(--text-secondary); letter-spacing: 0.5px; }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-icon {
-  color: var(--neon);
-  display: flex;
-  filter: drop-shadow(0 0 6px var(--neon-dim));
-}
-
-.brand-title {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  color: var(--neon);
-  line-height: 1.1;
-}
-
-.brand-subtitle {
-  margin: 2px 0 0;
-  font-size: 11px;
-  color: var(--text-secondary);
-  letter-spacing: 0.5px;
-}
-
-.header-actions {
-  display: flex;
-  gap: 8px;
-}
-
+.header-actions { display: flex; gap: 8px; }
 .btn {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: all 0.18s ease;
-  white-space: nowrap;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-secondary); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.4px; padding: 8px 12px; border-radius: 6px;
+  transition: all 0.18s ease; white-space: nowrap;
 }
+.btn:hover { color: var(--neon); border-color: var(--neon); box-shadow: 0 0 10px var(--neon-dim); }
 
-.btn:hover {
-  color: var(--neon);
-  border-color: var(--neon);
-  box-shadow: 0 0 10px var(--neon-dim);
-}
-
-/* Tabs */
-.tabs {
-  display: flex;
-  gap: 8px;
-}
-
+.tabs { display: flex; gap: 8px; }
 .tab {
-  flex: 1;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  padding: 10px 6px;
-  border-radius: 8px;
+  flex: 1; background: var(--panel); border: 1px solid var(--border);
+  color: var(--text-secondary); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.5px; padding: 10px 4px; border-radius: 8px;
   transition: all 0.18s ease;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-
-.tab:hover {
-  color: var(--text-primary);
-}
-
+.tab svg { flex-shrink: 0; }
+.tab:hover { color: var(--text-primary); }
 .tab-active {
-  color: var(--neon);
-  border-color: var(--neon);
-  box-shadow: 0 0 14px var(--neon-dim);
-  background: rgba(29, 242, 165, 0.06);
+  color: var(--neon); border-color: var(--neon);
+  box-shadow: 0 0 14px var(--neon-dim); background: rgba(29, 242, 165, 0.06);
 }
 
-/* Panel: Chuỗi Gen Đa Hợp */
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.panel-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.panel-title { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.6px; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+.panel-title-icon { color: var(--neon); }
+.panel-controls { display: flex; align-items: center; gap: 10px; }
+.icon-btn { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); font-size: 15px; display: flex; align-items: center; justify-content: center; transition: all 0.18s ease; }
+.icon-btn:hover { color: var(--neon); border-color: var(--neon); box-shadow: 0 0 10px var(--neon-dim); }
+.stepper { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.stepper-btn { width: 28px; height: 30px; background: transparent; border: none; color: var(--text-secondary); font-size: 15px; font-weight: 700; transition: all 0.18s ease; }
+.stepper-btn:hover:not(:disabled) { color: var(--neon); background: rgba(29, 242, 165, 0.08); }
+.stepper-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.stepper-value { min-width: 26px; text-align: center; font-size: 13px; font-weight: 800; color: var(--neon); }
 
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
+.dna-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.dna-slot { position: relative; aspect-ratio: 1/1; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; transition: all 0.2s ease; }
+.dna-slot--empty { border: 1px dashed var(--border); background: rgba(255, 255, 255, 0.01); cursor: pointer; }
+.dna-slot--empty:hover { border-color: var(--neon-dim); }
+.slot-label { font-size: 10px; font-weight: 700; color: var(--neon); letter-spacing: 0.4px; z-index: 2; }
+.slot-viewfinder { position: absolute; inset: 26px 10px 40px 10px; }
+.corner { position: absolute; width: 14px; height: 14px; border-color: var(--neon-dim); border-style: solid; border-width: 0; }
+.corner--tl { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; }
+.corner--tr { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; }
+.corner--bl { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; }
+.corner--br { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; }
+.slot-empty-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
+.slot-empty-arrow { color: var(--text-secondary); font-size: 15px; }
+.slot-empty-text { font-size: 9.5px; font-weight: 700; letter-spacing: 0.4px; color: var(--text-secondary); }
+.slot-footer { display: flex; align-items: center; justify-content: space-between; z-index: 2; }
+.slot-size { display: flex; align-items: center; gap: 4px; font-size: 9px; color: var(--text-secondary); letter-spacing: 0.3px; }
+.slot-size strong { color: var(--neon); font-size: 9px; }
+.slot-size-blocks { display: flex; gap: 2px; }
+.size-block { width: 6px; height: 6px; border-radius: 1px; background: var(--border); }
+.size-block--active { background: var(--neon); }
 
-.panel-title {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.dna-slot--filled { border: 1px solid var(--neon); background: rgba(29, 242, 165, 0.04); box-shadow: 0 0 16px var(--neon-dim); }
+.slot-filled-header { display: flex; align-items: center; justify-content: space-between; }
+.slot-alien-name { font-size: 11px; font-weight: 800; color: var(--neon); letter-spacing: 0.3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slot-remove-btn { background: transparent; border: none; color: var(--text-secondary); font-size: 12px; line-height: 1; padding: 2px 4px; border-radius: 4px; transition: all 0.15s ease; }
+.slot-remove-btn:hover { color: var(--danger); background: rgba(255, 92, 92, 0.1); }
+.slot-alien-image-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+.slot-alien-image { max-width: 78%; max-height: 78%; object-fit: contain; filter: drop-shadow(0 0 8px var(--neon-dim)); }
 
-.panel-title-icon {
-  color: var(--neon);
-}
-
-.panel-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.icon-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.18s ease;
-}
-
-.icon-btn:hover {
-  color: var(--neon);
-  border-color: var(--neon);
-  box-shadow: 0 0 10px var(--neon-dim);
-}
-
-.icon-btn:active {
-  transform: rotate(25deg);
-}
-
-.stepper {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.stepper-btn {
-  width: 28px;
-  height: 30px;
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 15px;
-  font-weight: 700;
-  transition: all 0.18s ease;
-}
-
-.stepper-btn:hover:not(:disabled) {
-  color: var(--neon);
-  background: rgba(29, 242, 165, 0.08);
-}
-
-.stepper-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.stepper-value {
-  min-width: 26px;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--neon);
-}
-
-/* Grid ADN */
-.dna-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.dna-slot {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 10px;
-  transition: all 0.2s ease;
-}
-
-/* ---- Trạng thái 1: Ô trống ---- */
-.dna-slot--empty {
-  border: 1px dashed var(--border);
-  background: rgba(255, 255, 255, 0.01);
-  cursor: pointer;
-}
-
-.dna-slot--empty:hover {
-  border-color: var(--neon-dim);
-}
-
-.slot-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--neon);
-  letter-spacing: 0.4px;
-  z-index: 2;
-}
-
-.slot-viewfinder {
-  position: absolute;
-  inset: 26px 10px 40px 10px;
-}
-
-.corner {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-color: var(--neon-dim);
-  border-style: solid;
-  border-width: 0;
-}
-.corner--tl {
-  top: 0;
-  left: 0;
-  border-top-width: 2px;
-  border-left-width: 2px;
-}
-.corner--tr {
-  top: 0;
-  right: 0;
-  border-top-width: 2px;
-  border-right-width: 2px;
-}
-.corner--bl {
-  bottom: 0;
-  left: 0;
-  border-bottom-width: 2px;
-  border-left-width: 2px;
-}
-.corner--br {
-  bottom: 0;
-  right: 0;
-  border-bottom-width: 2px;
-  border-right-width: 2px;
-}
-
-.slot-empty-center {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  text-align: center;
-}
-
-.slot-empty-arrow {
-  color: var(--text-secondary);
-  font-size: 15px;
-}
-
-.slot-empty-text {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  color: var(--text-secondary);
-}
-
-.slot-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 2;
-}
-
-.slot-size {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 9px;
-  color: var(--text-secondary);
-  letter-spacing: 0.3px;
-}
-
-.slot-size strong {
-  color: var(--neon);
-  font-size: 9px;
-}
-
-.slot-size-blocks {
-  display: flex;
-  gap: 2px;
-}
-
-.size-block {
-  width: 6px;
-  height: 6px;
-  border-radius: 1px;
-  background: var(--border);
-}
-
-.size-block--active {
-  background: var(--neon);
-}
-
-/* ---- Trạng thái 2: Ô đã có Alien ---- */
-.dna-slot--filled {
-  border: 1px solid var(--neon);
-  background: rgba(29, 242, 165, 0.04);
-  box-shadow: 0 0 16px var(--neon-dim);
-}
-
-.slot-filled-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.slot-alien-name {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--neon);
-  letter-spacing: 0.3px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.slot-remove-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 12px;
-  line-height: 1;
-  padding: 2px 4px;
-  border-radius: 4px;
-  transition: all 0.15s ease;
-}
-
-.slot-remove-btn:hover {
-  color: var(--danger);
-  background: rgba(255, 92, 92, 0.1);
-}
-
-.slot-alien-image-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.slot-alien-image {
-  max-width: 78%;
-  max-height: 78%;
-  object-fit: contain;
-  filter: drop-shadow(0 0 8px var(--neon-dim));
-}
-
-/* Nút xử lý */
-.process-btn {
-  margin-top: auto;
-  width: 100%;
-  background: rgba(29, 242, 165, 0.08);
-  border: 1px solid var(--neon);
-  color: var(--neon);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  padding: 14px;
-  border-radius: 10px;
-  transition: all 0.2s ease;
-}
-
-.process-btn:hover {
-  background: rgba(29, 242, 165, 0.16);
-  box-shadow: 0 0 22px var(--neon-dim);
-}
-
-.process-btn:active {
-  transform: scale(0.99);
-}
+.process-btn { margin-top: auto; width: 100%; background: rgba(29, 242, 165, 0.08); border: 1px solid var(--neon); color: var(--neon); font-size: 13px; font-weight: 800; letter-spacing: 1px; padding: 14px; border-radius: 10px; transition: all 0.2s ease; }
+.process-btn:hover { background: rgba(29, 242, 165, 0.16); box-shadow: 0 0 22px var(--neon-dim); }
+.process-btn:active { transform: scale(0.99); }
 
 /* ==========================================================================
-   MAIN VIEW (CỘT PHẢI)
+   MAIN VIEW & RADAR CORE
    ========================================================================== */
-
 .main-view {
-  position: relative;
-  background: var(--bg);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dot-grid {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(29, 242, 165, 0.16) 1px, transparent 1px);
-  background-size: 26px 26px;
-  opacity: 0.5;
-  pointer-events: none;
+  position: relative; background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  flex: 1; overflow: hidden;
 }
 
 .radar-wrap {
-  position: relative;
-  width: min(60vh, 520px);
-  height: min(60vh, 520px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative; width: min(60vh, 480px); height: min(60vh, 480px);
+  display: flex; align-items: center; justify-content: center;
 }
 
-.radar-ring {
-  position: absolute;
-  border-radius: 50%;
-  border-style: dashed;
-  border-color: var(--neon);
-  pointer-events: none;
-}
+.radar-core { position: absolute; inset: 0; z-index: 2; }
 
-/* Vòng ngoài cùng — lớn nhất, mờ nhất, xoay rất chậm */
-.radar-ring--r1 {
-  inset: 0;
-  border-width: 1px;
-  opacity: 0.2;
-  animation: spin 36s linear infinite;
-}
-
-/* Vòng thứ hai — xoay ngược chiều, nhanh hơn một chút */
-.radar-ring--r2 {
-  inset: 13%;
-  border-width: 1.5px;
-  opacity: 0.4;
-  animation: spin 22s linear infinite reverse;
-}
-
-/* Vòng thứ ba — đứng yên (tĩnh), chỉ để tạo lớp chiều sâu */
-.radar-ring--r3 {
-  inset: 27%;
-  border-width: 1px;
-  opacity: 0.26;
-}
-
-/* Vòng trong cùng — nhỏ nhất, đậm nhất, xoay nhanh nhất */
-.radar-ring--r4 {
-  inset: 42%;
-  border-width: 2px;
-  opacity: 0.6;
-  animation: spin 15s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* ==========================================================================
-   KHỐI TRUNG TÂM — .radar-core
-   Gồm 3 lớp đồng tâm tuyệt đối, xếp theo z-index tăng dần:
-   1) .radar-core-glow  — hào quang neon, chạy animation "thở" (pulse) liên tục
-   2) .radar-core-base  — khối tròn nền đen, khớp tuyệt đối với var(--bg)
-   3) .radar-core-icon  — icon, đứng yên hoàn toàn, không animation
-   ========================================================================== */
-
-.radar-core {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-}
-
-/* Lớp 1: Hào quang neon — kích thước 46% cạnh .radar-wrap (bằng đúng đường
-   kính vòng nét đứt thứ 2 tính từ trong ra: radar-ring--r4 = vòng 1,
-   radar-ring--r3 = vòng 2 với inset 27% => 100% - 27%*2 = 46%).
-   Animation corePulse thay đổi đồng thời opacity + scale + box-shadow theo
-   chu kỳ ease-in-out lặp vô hạn, tạo cảm giác lõi năng lượng đang "thở". */
+/* 1. Hào quang mập mờ */
 .radar-core-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 46%;
-  height: 46%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(29, 242, 165, 0.4) 0%,
-    rgba(29, 242, 165, 0.22) 40%,
-    rgba(29, 242, 165, 0.08) 68%,
-    rgba(29, 242, 165, 0) 100%
-  );
-  z-index: 1;
-  pointer-events: none;
-  animation: corePulse 2.8s ease-in-out infinite;
-  will-change: opacity, transform, box-shadow;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 240px; height: 240px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,242,165,0.45) 0%, rgba(29,242,165,0.15) 50%, transparent 80%);
+  animation: corePulse 2.5s ease-in-out infinite alternate;
+  z-index: 1; pointer-events: none;
 }
-
 @keyframes corePulse {
-  0%,
-  100% {
-    opacity: 0.6;
-    transform: translate(-50%, -50%) scale(0.92);
-    box-shadow: 0 0 26px 4px var(--neon-dim);
-  }
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.06);
-    box-shadow: 0 0 58px 16px var(--neon-glow);
-  }
+  0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.92); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
 }
 
-/* Lớp 2: Khối tròn nền đen — đường kính 34% (nhỏ hơn glow 46%) để phần
-   glow "tràn" ra viền xung quanh nhìn thấy được, giống hiệu ứng quầng sáng
-   bao quanh lõi đen. Dùng đúng var(--bg) nên màu luôn khớp tuyệt đối với
-   nền tổng thể của trang, không lệch tông, không lộ viền sắc cứng. */
+/* 2. Khối đen che trung tâm - KHỚP 100% MÀU NỀN TOÀN TRANG */
 .radar-core-base {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 34%;
-  height: 34%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: var(--bg);
-  z-index: 2;
-  pointer-events: none;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 144px; height: 144px; border-radius: 50%;
+  background: var(--bg); /* #0a0c10 - Che khuất grid, không lộ viền */
+  z-index: 2; pointer-events: none;
 }
 
-/* Lớp 3: Icon — căn giữa bằng đúng kỹ thuật top/left 50% + translate(-50%,-50%)
-   như 2 lớp trên nên luôn đồng tâm tuyệt đối với glow, với khối đen, và với
-   toàn bộ hệ vòng radar. Icon đứng yên hoàn toàn: không animation riêng. */
+/* 3. Icon cố định */
 .radar-core-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--neon);
-  z-index: 3;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--neon); z-index: 3; filter: drop-shadow(0 0 10px var(--neon-dim));
 }
 
-/* Dòng trạng thái: neo theo mép dưới của glow (50% + bán kính glow 23%)
-   rồi cộng thêm khoảng cách cố định 22px */
+/* 4. Trạng thái */
 .radar-core-status {
-  position: absolute;
-  top: calc(50% + 23% + 22px);
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 3.5px;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  text-align: center;
-  white-space: nowrap;
+  position: absolute; top: calc(50% + 82px); 
+  left: 50%; transform: translateX(-50%);
+  font-size: 11px; font-weight: 700; letter-spacing: 3.5px;
+  text-transform: uppercase; color: var(--text-secondary);
+  text-align: center; white-space: nowrap;
   animation: statusPulse 2.6s ease-in-out infinite;
+  z-index: 4; text-shadow: 0 0 8px rgba(0,0,0,0.8);
 }
-
 @keyframes statusPulse {
-  0%,
-  100% {
-    opacity: 0.45;
-  }
-  50% {
-    opacity: 1;
-  }
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
 }
 
-.fusion-result {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--panel);
-  border: 1px solid var(--neon);
-  box-shadow: 0 0 24px var(--neon-dim);
-  border-radius: 12px;
-  padding: 16px 22px;
-  min-width: 280px;
-  text-align: center;
-}
-
-.fusion-result h3 {
-  margin: 0 0 6px;
-  color: var(--neon);
-  font-size: 16px;
-  letter-spacing: 0.5px;
-}
-
-.fusion-result p {
-  margin: 2px 0;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.fusion-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.fusion-stat-chip {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 10.5px;
-  color: var(--text-primary);
-}
-
-.fusion-stat-chip strong {
-  color: var(--neon);
-}
+.fusion-result { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: var(--panel); border: 1px solid var(--neon); box-shadow: 0 0 24px var(--neon-dim); border-radius: 12px; padding: 16px 22px; min-width: 280px; text-align: center; z-index: 20; }
+.fusion-result h3 { margin: 0 0 6px; color: var(--neon); font-size: 16px; letter-spacing: 0.5px; }
+.fusion-result p { margin: 2px 0; font-size: 12px; color: var(--text-secondary); }
+.fusion-stats { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
+.fusion-stat-chip { border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 10.5px; color: var(--text-primary); }
+.fusion-stat-chip strong { color: var(--neon); }
 
 /* ==========================================================================
-   MODAL (KHO ALIEN)
+   MODAL & TOAST
    ========================================================================== */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 24px; }
+.modal-overlay[hidden] { display: none; }
+.modal { width: min(640px, 100%); max-height: 80vh; background: var(--panel-alt); border: 1px solid var(--border); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 0 40px rgba(0, 0, 0, 0.6); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; }
+.modal-header h3 { margin: 0; font-size: 13px; letter-spacing: 0.6px; color: var(--neon); }
+.modal-close { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); width: 26px; height: 26px; border-radius: 6px; font-size: 12px; transition: all 0.15s ease; }
+.modal-close:hover { color: var(--danger); border-color: var(--danger); }
+.modal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; overflow-y: auto; padding-right: 4px; }
+.modal-item { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; transition: all 0.18s ease; text-align: center; }
+.modal-item:hover { border-color: var(--neon); box-shadow: 0 0 14px var(--neon-dim); transform: translateY(-2px); }
+.modal-item img { width: 64px; height: 64px; object-fit: contain; }
+.modal-item span { font-size: 11px; font-weight: 700; color: var(--text-primary); }
+.modal-item small { font-size: 9.5px; color: var(--text-secondary); }
+.modal-item--disabled { opacity: 0.35; cursor: not-allowed; }
+.modal-item--disabled:hover { border-color: var(--border); box-shadow: none; transform: none; }
 
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.72);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-  padding: 24px;
-}
-
-.modal-overlay[hidden] {
-  display: none;
-}
-
-.modal {
-  width: min(640px, 100%);
-  max-height: 80vh;
-  background: var(--panel-alt);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.modal-header h3 {
-  margin: 0;
-  font-size: 13px;
-  letter-spacing: 0.6px;
-  color: var(--neon);
-}
-
-.modal-close {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
-  font-size: 12px;
-  transition: all 0.15s ease;
-}
-
-.modal-close:hover {
-  color: var(--danger);
-  border-color: var(--danger);
-}
-
-.modal-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-.modal-item {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  text-align: center;
-}
-
-.modal-item:hover {
-  border-color: var(--neon);
-  box-shadow: 0 0 14px var(--neon-dim);
-  transform: translateY(-2px);
-}
-
-.modal-item img {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-}
-
-.modal-item span {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.modal-item small {
-  font-size: 9.5px;
-  color: var(--text-secondary);
-}
-
-.modal-item--disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.modal-item--disabled:hover {
-  border-color: var(--border);
-  box-shadow: none;
-  transform: none;
-}
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--panel-alt); border: 1px solid var(--neon); color: var(--text-primary); font-size: 12.5px; padding: 10px 18px; border-radius: 8px; box-shadow: 0 0 20px var(--neon-dim); z-index: 100; transition: opacity 0.25s ease, transform 0.25s ease; }
+.toast[hidden] { display: none; }
+.toast--error { border-color: var(--danger); box-shadow: 0 0 20px rgba(255, 92, 92, 0.35); }
 
 /* ==========================================================================
-   TOAST
+   RESPONSIVE MOBILE STACK
    ========================================================================== */
-
-.toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--panel-alt);
-  border: 1px solid var(--neon);
-  color: var(--text-primary);
-  font-size: 12.5px;
-  padding: 10px 18px;
-  border-radius: 8px;
-  box-shadow: 0 0 20px var(--neon-dim);
-  z-index: 100;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.toast[hidden] {
-  display: none;
-}
-
-.toast--error {
-  border-color: var(--danger);
-  box-shadow: 0 0 20px rgba(255, 92, 92, 0.35);
-}
-
-/* ==========================================================================
-   RESPONSIVE (thu nhỏ tối thiểu để không vỡ layout trên màn hẹp)
-   ========================================================================== */
-
 @media (max-width: 900px) {
   .app-shell {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    overflow-y: auto; 
     height: auto;
-    min-height: 100vh;
   }
   .sidebar {
+    width: 100%;
     border-right: none;
     border-bottom: 1px solid var(--border);
-    max-height: 60vh;
+    max-height: none; overflow: visible;
   }
   .main-view {
-    min-height: 40vh;
+    width: 100%;
+    min-height: 55vh;
+    padding: 60px 0;
   }
 }
