@@ -82,9 +82,13 @@
         <div class="radar-ring radar-ring--r4" aria-hidden="true"></div>
 
         <div class="radar-core" id="radarCore" aria-live="polite">
-          <!-- Quầng glow trung tâm: đứng dưới icon (z-index thấp hơn), đồng tâm
-               tuyệt đối với icon và với cả hệ vòng radar -->
+          <!-- Lớp 1: Quầng glow trung tâm — chạy animation pulse liên tục,
+               nằm dưới cùng để tạo hào quang lan ra xung quanh khối đen -->
           <div class="radar-core-glow" aria-hidden="true"></div>
+
+          <!-- Lớp 2: Khối tròn nền đen — khớp tuyệt đối với var(--bg),
+               nằm giữa glow và icon, che phần trong của glow -->
+          <div class="radar-core-base" aria-hidden="true"></div>
 
           <div class="radar-core-icon" aria-hidden="true">
             <!-- Icon "Layers / Stack" dạng SVG, tô màu neon qua currentColor -->
