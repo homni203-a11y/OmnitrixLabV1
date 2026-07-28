@@ -1,137 +1,104 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lõi Omnitrix - Biomnitrix</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lõi Omnitrix</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-    <div class="app-container">
-        
-        <!-- CỘT TRÁI: BẢNG ĐIỀU KHIỂN (SIDEBAR) -->
-        <aside class="sidebar">
-            
-            <header class="app-header">
-                <div class="logo">
-                    <img src="./cpu.png" alt="CPU Core" class="cpu-icon">
-                    <div>
-                        <h1>LÕI OMNITRIX</h1>
-                        <p>USER_ID // TENNYSON</p>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-outline">ĐẤU TRƯỜNG</button>
-                    <button class="btn-outline">BỘ SƯU TẬP</button>
-                </div>
-            </header>
+  <div id="app" class="app-shell">
 
-            <!-- TABS MODULE -->
-            <div class="mode-tabs">
-                <button class="tab">
-                    <span class="tab-icon">⚡</span> ULTIMATE
-                </button>
-                <button class="tab active">
-                    <span class="tab-icon">📚</span> BIOMNITRIX
-                </button>
-                <button class="tab">
-                    <span class="tab-icon">♡</span> CHAQUETRIX
-                </button>
-            </div>
+    <!-- ========================= CỘT TRÁI: SIDEBAR ========================= -->
+    <aside class="sidebar">
 
-            <div class="panel">
-                <header class="panel__header">
-                    <div class="title-group">
-                        <span class="icon-stars">✦</span>
-                        <h2 class="sidebar__title">CHUỖI GEN ĐA HỢP</h2>
-                    </div>
-                    <div class="sidebar__controls">
-                        <!-- Nút Random -->
-                        <button class="btn-icon" id="btn-random" title="Chọn ngẫu nhiên">⚁</button>
-                        <!-- Điều chỉnh số lượng (2-5) -->
-                        <div class="counter">
-                            <button class="counter-btn" id="btn-decrease">−</button>
-                            <span id="slot-count-display" class="counter-value">2</span>
-                            <button class="counter-btn" id="btn-increase">+</button>
-                        </div>
-                    </div>
-                </header>
+      <!-- Header: Logo + Action buttons -->
+      <header class="sidebar-header">
+        <div class="brand">
+          <span class="brand-icon" aria-hidden="true">
+            <!-- Icon CPU dạng inline SVG (thay cho cpu.png để không bị lỗi 404),
+                 tô màu bằng currentColor nên vẫn đổi màu neon như yêu cầu -->
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="6" y="6" width="12" height="12" rx="1.5"/>
+              <rect x="9" y="9" width="6" height="6" rx="0.5"/>
+              <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>
+            </svg>
+          </span>
+          <div class="brand-text">
+            <h1 class="brand-title">LÕI OMNITRIX</h1>
+            <p class="brand-subtitle">USER_ID // TENNYSON</p>
+          </div>
+        </div>
 
-                <!-- KHU VỰC CHỨA CÁC THẺ ADN -->
-                <section class="dna-grid" id="fusion-slots">
-                    <!-- JS sẽ render thẻ tại đây -->
-                </section>
-            </div>
+        <div class="header-actions">
+          <button type="button" class="btn btn-outline" id="btnArena">ĐẤU TRƯỜNG</button>
+          <button type="button" class="btn btn-outline" id="btnCollection">BỘ SƯU TẬP</button>
+        </div>
+      </header>
 
-            <!-- Kho chọn Alien -->
-            <div class="panel inventory-panel">
-                <h3 class="panel__title-small">KHO LƯU TRỮ ALIEN</h3>
-                <div id="alien-grid" class="inventory-grid">
-                    <!-- JS sẽ render kho tại đây -->
-                </div>
-            </div>
+      <!-- Tabs -->
+      <nav class="tabs" role="tablist" aria-label="Chế độ dung hợp">
+        <button type="button" class="tab" role="tab" data-tab="ultimate">ULTIMATE</button>
+        <button type="button" class="tab tab-active" role="tab" data-tab="biomnitrix" aria-selected="true">BIOMNITRIX</button>
+        <button type="button" class="tab" role="tab" data-tab="chaquetrix">CHAQUETRIX</button>
+      </nav>
 
-            <button class="btn-process" id="fuse-btn">
-                <span class="spinner" id="fuse-spinner" style="display:none;"></span> 
-                <span id="fuse-text">BẮT ĐẦU DUNG HỢP</span>
+      <!-- Module Chuỗi Gen Đa Hợp -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><span class="panel-title-icon" aria-hidden="true">✦</span>CHUỖI GEN ĐA HỢP</h2>
+
+          <div class="panel-controls">
+            <button type="button" class="icon-btn" id="btnDice" title="Ngẫu nhiên hóa">
+              <span aria-hidden="true">⚁</span>
             </button>
-        </aside>
 
-        <!-- CỘT PHẢI: MÀN HÌNH HIỂN THỊ CHÍNH -->
-        <main class="main-display">
-            <div class="radar-background">
-                <div class="radar-circle circle-1"></div>
-                <div class="radar-circle circle-2"></div>
-                <div class="radar-crosshair"></div>
+            <div class="stepper" id="slotStepper">
+              <button type="button" class="stepper-btn" id="btnSlotMinus" aria-label="Giảm số ô">-</button>
+              <span class="stepper-value" id="slotCountDisplay">2</span>
+              <button type="button" class="stepper-btn" id="btnSlotPlus" aria-label="Tăng số ô">+</button>
             </div>
+          </div>
+        </div>
 
-            <!-- UI Trống ban đầu -->
-            <div id="empty-state" class="empty-state">
-                <div class="dna-spinner">🧬</div>
-                <p>ĐANG CHỜ MÃ GEN...</p>
-            </div>
+        <!-- Lưới các ô ADN được render động bởi main.js -->
+        <div class="dna-grid" id="dnaGrid" aria-live="polite"></div>
+      </section>
 
-            <!-- Kết quả dung hợp -->
-            <div class="display-content hidden" id="result-content">
-                <section class="info-panel">
-                    <header class="info-panel__header">
-                        <div class="header-title">
-                            <span class="icon-pulse">∿</span> BÁO CÁO MÃ GEN
-                        </div>
-                    </header>
-                    
-                    <div class="info-panel__id">[ MÃ ĐỊNH DANH GEN: <span id="res-id">UNKNOWN</span> ]</div>
-                    <h1 class="alien-name-glowing" id="res-name">TÊN ALIEN</h1>
+      <!-- Nút xử lý / dung hợp -->
+      <button type="button" class="process-btn" id="btnProcess">ĐANG XỬ LÝ...</button>
+    </aside>
 
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <span class="stat-label">CẤP ĐỘ ĐE DỌA</span>
-                            <div class="stat-value text-danger" id="res-danger">NGUY HIỂM</div>
-                        </div>
-                        <div class="stat-box">
-                            <span class="stat-label">HỆ GEN GỐC</span>
-                            <div class="stat-value text-green" id="res-type" style="font-size: 1rem;">-</div>
-                        </div>
-                        <div class="stat-box radar-box">
-                            <span class="stat-label">∿ MA TRẬN CHỈ SỐ</span>
-                            <div class="chart-container">
-                                <canvas id="radar-chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+    <!-- ========================= CỘT PHẢI: MAIN VIEW ========================= -->
+    <main class="main-view">
+      <div class="dot-grid" aria-hidden="true"></div>
 
-                <section class="alien-stage">
-                    <div class="white-canvas">
-                        <img id="res-image" src="" alt="Fusion Result" class="alien-img-placeholder">
-                    </div>
-                </section>
-            </div>
-        </main>
+      <div class="radar-wrap">
+        <div class="radar-ring" aria-hidden="true"></div>
+        <div class="radar-ring radar-ring--outer" aria-hidden="true"></div>
+        <div class="dna-core" id="dnaCore" aria-live="polite">
+          <span class="dna-core-emoji">🧬</span>
+        </div>
+      </div>
+
+      <div class="fusion-result" id="fusionResult" hidden></div>
+    </main>
+  </div>
+
+  <!-- ========================= MODAL: KHO ALIEN (inventory / collection) ========================= -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 id="modalTitle">NẠP MÃ GEN</h3>
+        <button type="button" class="modal-close" id="btnModalClose" aria-label="Đóng">✕</button>
+      </div>
+      <div class="modal-grid" id="modalGrid"></div>
     </div>
-    
-    <!-- Link file JS (Cần set type="module" nếu bạn dùng import/export trong file data.js) -->
-    <script type="module" src="./main.js"></script>
+  </div>
+
+  <!-- Toast thông báo -->
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module" src="./main.js"></script>
 </body>
 </html>
