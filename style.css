@@ -57,15 +57,17 @@ button { font-family: inherit; cursor: pointer; outline: none; }
 .sidebar-header { display: flex; flex-direction: column; gap: 16px; }
 .brand { display: flex; align-items: center; gap: 14px; }
 
-/* FIX LỖI MÉO ICON: Thiết lập width, height cứng định hình vùng bao */
+/* FIX LỖI MÉO ICON: Thiết lập width, height và aspect-ratio chuẩn 1:1 */
 .brand-icon-wrap {
-  width: 40px; height: 40px; border-radius: 50%;
-  border: 2px solid var(--theme-base); flex-shrink: 0; 
+  width: 40px; height: 40px; min-width: 40px; min-height: 40px;
+  border-radius: 50%; border: 2px solid var(--theme-base); 
+  aspect-ratio: 1 / 1; flex-shrink: 0; 
   display: flex; align-items: center; justify-content: center;
   color: var(--theme-base); box-shadow: 0 0 10px var(--theme-dim);
   transition: all 0.4s ease;
 }
-.brand-title { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: 0.5px; color: var(--theme-base); transition: color 0.4s ease; }
+.brand-title { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: 0.5px; color: var(--theme-base); transition: color 0.4s ease; display: flex; align-items: center; gap: 10px; }
+.badge-team { font-size: 10px; background: var(--theme-bg-subtle); border: 1px solid var(--theme-base); padding: 2px 6px; border-radius: 4px; color: var(--theme-base); }
 .brand-subtitle { margin: 2px 0 0; font-size: 11px; color: var(--text-secondary); letter-spacing: 1px; }
 
 /* TABS & PANELS */
@@ -88,8 +90,8 @@ button { font-family: inherit; cursor: pointer; outline: none; }
 .stepper-value { min-width: 26px; text-align: center; font-size: 13px; font-weight: 800; color: var(--theme-base); }
 
 .dna-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.dna-slot { aspect-ratio: 1/1; border-radius: 10px; border: 1px dashed var(--border); padding: 10px; display: flex; flex-direction: column; cursor: pointer; transition: 0.2s; }
-.dna-slot:hover { border-color: var(--theme-dim); background: rgba(255,255,255,0.02); }
+.dna-slot { aspect-ratio: 1/1; border-radius: 10px; border: 1.5px dashed var(--border); padding: 10px; display: flex; flex-direction: column; cursor: pointer; transition: 0.2s; }
+.dna-slot:hover { border-color: var(--theme-base); background: var(--theme-bg-subtle); }
 .slot-label { font-size: 10px; font-weight: 700; color: var(--theme-base); transition: color 0.4s ease; }
 
 .process-btn { margin-top: auto; width: 100%; background: var(--theme-bg-subtle); border: 1px solid var(--theme-base); color: var(--theme-base); font-size: 13px; font-weight: 800; letter-spacing: 1px; padding: 16px; border-radius: 10px; transition: all 0.3s ease; box-shadow: 0 0 15px var(--theme-dim); }
@@ -113,30 +115,34 @@ button { font-family: inherit; cursor: pointer; outline: none; }
 }
 .btn-action:hover { border-color: var(--theme-base); color: var(--theme-base); box-shadow: 0 0 12px var(--theme-bg-subtle); }
 .btn-action .icon-colored { color: var(--theme-base); transition: color 0.4s ease; }
-/* Riêng nút 1 (Setting) chỉ chứa icon -> Padding đều để tạo hình vuông */
 .btn-icon-only { padding: 10px 12px; }
 
-/* THÔNG BÁO WIP */
-.wip-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 30; background: rgba(10, 12, 16, 0.7); backdrop-filter: blur(8px); text-align: center; animation: fadeIn 0.4s ease; }
+/* THÔNG BÁO ĐANG DẦN HOÀN THIỆN */
+.wip-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; z-index: 30;
+  background: rgba(10, 12, 16, 0.85); backdrop-filter: blur(10px);
+  text-align: center; animation: fadeIn 0.4s ease;
+}
 .wip-overlay h2 { color: var(--theme-base); font-size: 22px; letter-spacing: 2px; margin: 16px 0 8px; }
-.wip-overlay p { color: var(--text-secondary); font-size: 13px; }
+.wip-overlay p { color: var(--text-secondary); font-size: 13px; margin: 0; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* RADAR CORE */
-.radar-wrap { position: relative; width: min(60vh, 480px); height: min(60vh, 480px); display: flex; align-items: center; justify-content: center; }
+.radar-wrap { position: relative; width: min(60vh, 480px); height: min(60vh, 480px); display: flex; align-items: center; justify-content: center; transition: all 0.4s ease; }
 .radar-core { position: absolute; inset: 0; z-index: 2; animation: jitter 1s infinite; }
 @keyframes jitter { 0%, 100% { transform: translate(0, 0); } 25% { transform: translate(-0.5px, 0.5px); } 50% { transform: translate(0.5px, -0.5px); } 75% { transform: translate(-0.5px, -0.5px); } }
 
 .radar-core-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, var(--theme-glow) 0%, var(--theme-dim) 40%, transparent 75%); animation: corePulse 2s ease-in-out infinite alternate; z-index: 1; pointer-events: none; transition: background 0.4s ease; }
 @keyframes corePulse { 0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.9); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); } }
 .radar-core-base { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 144px; height: 144px; border-radius: 50%; background: var(--bg); z-index: 2; }
-.radar-core-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--theme-base); z-index: 3; filter: drop-shadow(0 0 15px var(--theme-dim)); transition: color 0.4s ease, filter 0.4s ease; display: flex; }
+.radar-core-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--theme-base); z-index: 3; filter: drop-shadow(0 0 15px var(--theme-dim)); transition: color 0.4s ease; display: flex; }
 .radar-core-status { position: absolute; top: calc(50% + 90px); left: 50%; transform: translateX(-50%); font-size: 11px; font-weight: 700; letter-spacing: 3.5px; color: var(--theme-base); z-index: 4; text-shadow: 0 0 10px rgba(0,0,0,0.8); transition: color 0.4s ease; }
 
 @media (max-width: 900px) {
   .app-shell { overflow-y: auto; height: auto; }
   .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 16px; }
-  .main-view { min-height: 60vh; padding: 60px 0; }
-  .top-right-actions { position: relative; top: auto; right: auto; margin: 20px auto; flex-wrap: wrap; justify-content: center; }
+  .main-view { min-height: 60vh; padding: 80px 16px 40px; }
+  .top-right-actions { top: 16px; right: 16px; flex-wrap: wrap; }
   .radar-wrap { width: 280px; height: 280px; }
 }
