@@ -5,37 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lõi Omnitrix - Hệ Thống Nâng Cấp Cao Cấp</title>
   <link rel="stylesheet" href="./style.css" />
-  <style>
-    /* BẢN VÁ LỖI: HIỂN THỊ ICON RADAR */
-    
-    #radarCoreIcon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 10;
-    }
-    
-    #radarCoreIcon svg {
-      /* Giảm kích thước xuống 35% để nằm gọn hoàn toàn trong lõi đen (cách viền ~5%) */
-      width: 35% !important;
-      height: 35% !important;
-      transition: all 0.3s ease;
-      overflow: visible; /* Đảm bảo các góc bo tròn không bị cắt lẹm */
-    }
-
-    /* Kỹ thuật khóa nét vẽ (Chống phình to và méo mó icon) */
-    #radarCoreIcon svg * {
-      vector-effect: non-scaling-stroke !important; /* Khóa tỷ lệ nét, không cho phóng to theo khung */
-      stroke-width: 2.5px !important; /* Cố định độ dày nét vẽ thực tế trên màn hình là 2.5px */
-      stroke-linecap: round !important;
-      stroke-linejoin: round !important;
-    }
-  </style>
 </head>
 <body class="theme-biomnitrix">
   <!-- GLOBAL BACKGROUND -->
@@ -176,10 +145,10 @@
 
         <!-- NÚT THỰC THI ACTION -->
         <button type="button" class="process-btn" id="btnProcess">
-          <svg id="btnProcessIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg id="btnProcessIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
             <polyline points="2 17 12 22 22 17"></polyline>
-            <polyline points="2 12 12 17 22 12"></polyline>
+            <polyline points="2 12 17 22 12"></polyline>
           </svg>
           <span id="btnProcessText">DUNG HỢP ADN</span>
         </button>
@@ -196,11 +165,10 @@
             <div class="radar-core-glow"></div>
             <div class="radar-core-base"></div>
             <div class="radar-core-icon" id="radarCoreIcon">
-              <!-- Inline width/height đã được gỡ bỏ để nhường quyền kiểm soát tuyệt đối cho khối CSS phía trên -->
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="currentColor" stroke-width="1.4">
                 <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                 <polyline points="2 17 12 22 22 17"></polyline>
-                <polyline points="2 12 12 17 22 12"></polyline>
+                <polyline points="2 12 17 22 12"></polyline>
               </svg>
             </div>
             <div class="radar-core-status" id="radarCoreStatus">ĐANG HOẠT ĐỘNG</div>
