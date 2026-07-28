@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lõi Omnitrix - Hệ Thống Nâng Cấp</title>
+  <title>Lõi Omnitrix - Hệ Thống Nâng Cấp Cao Cấp</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body class="theme-biomnitrix">
@@ -17,81 +17,26 @@
   </div>
 
   <div id="app" class="app-shell">
-
-    <!-- ========================= CỘT TRÁI: KHUNG ĐIỀU KHIỂN ========================= -->
-    <aside class="sidebar">
-      <header class="sidebar-header">
-        <div class="brand">
-          <!-- Viền tròn ôm trọn icon lõi (Đã fix lỗi méo bằng flex-shrink và fixed size) -->
-          <div class="brand-icon-wrap">
-            <span class="brand-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6">
-                <rect x="6" y="6" width="12" height="12" rx="1.5"/>
-                <rect x="9" y="9" width="6" height="6" rx="0.5"/>
-                <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>
-              </svg>
-            </span>
-          </div>
-          <div class="brand-text">
-            <h1 class="brand-title">LÕI OMNITRIX</h1>
-            <p class="brand-subtitle">USER_ID // TENNYSON</p>
-          </div>
-        </div>
-      </header>
-
-      <!-- Tabs -->
-      <nav class="tabs" role="tablist">
-        <button type="button" class="tab" role="tab" data-tab="ultimate">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-          </svg>
-          ULTIMATE
-        </button>
-        <button type="button" class="tab tab-active" role="tab" data-tab="biomnitrix">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- APP HEADER: LOGO TRÁI & 4 NÚT PHẢI (RESPONSIVE) -->
+    <header class="app-header">
+      <div class="brand" id="brandContainer">
+        <div class="brand-icon-wrap" id="brandIconWrap">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
             <polyline points="2 17 12 22 22 17"></polyline>
             <polyline points="2 12 12 17 22 12"></polyline>
           </svg>
-          BIOMNITRIX
-        </button>
-        <button type="button" class="tab" role="tab" data-tab="chaquetrix">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
-          CHAQUETRIX
-        </button>
-      </nav>
-
-      <section class="panel">
-        <div class="panel-header">
-          <h2 class="panel-title"><span class="panel-title-icon" aria-hidden="true">✦</span>CHUỖI GEN ĐA HỢP</h2>
-          <div class="panel-controls">
-            <button type="button" class="icon-btn" id="btnDice" title="Ngẫu nhiên hóa">⚁</button>
-            <div class="stepper" id="slotStepper">
-              <button type="button" class="stepper-btn" id="btnSlotMinus">-</button>
-              <span class="stepper-value" id="slotCountDisplay">2</span>
-              <button type="button" class="stepper-btn" id="btnSlotPlus">+</button>
-            </div>
-          </div>
         </div>
-        <div class="dna-grid" id="dnaGrid">
-          <!-- Render tự động bởi script.js hoặc chứa các dna-slot mặc định -->
-          <div class="dna-slot"><span class="slot-label">ADN 1</span></div>
-          <div class="dna-slot"><span class="slot-label">ADN 2</span></div>
+        <div class="brand-text">
+          <h1 class="brand-title" id="brandTitle">BIOMNITRIX</h1>
+          <p class="brand-subtitle" id="brandSubtitle">USER_ID // Ben Tennyson</p>
         </div>
-      </section>
+      </div>
 
-      <button type="button" class="process-btn" id="btnProcess">DUNG HỢP ADN</button>
-    </aside>
-
-    <!-- ========================= CỘT PHẢI: KHUNG ĐỘC LẬP ========================= -->
-    <main class="main-view" id="rightPanel">
-      
-      <!-- CỤM 4 NÚT TÍNH NĂNG GÓC TRÊN PHẢI -->
+      <!-- CỤM 4 NÚT TÍNH NĂNG GÓC PHẢI -->
       <div class="top-right-actions">
-        <!-- Nút 1: Cài đặt (Bánh răng) -->
-        <button type="button" class="btn-action btn-icon-only" aria-label="Cài đặt">
+        <!-- Nút 1: Cài đặt -->
+        <button type="button" class="btn-action btn-icon-only" aria-label="Cài đặt" title="Cài đặt">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -99,7 +44,7 @@
         </button>
 
         <!-- Nút 2: Đấu trường -->
-        <button type="button" class="btn-action" id="btnArena">
+        <button type="button" class="btn-action" id="btnArena" title="Đấu trường">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14.5 17.5L3 6V3h3l11.5 11.5"></path>
             <path d="M13 19l6-6"></path>
@@ -110,60 +55,169 @@
             <path d="M8 8l-4 4"></path>
             <path d="M3 21l2-2"></path>
           </svg>
-          ĐẤU TRƯỜNG
+          <span class="btn-text">ĐẤU TRƯỜNG</span>
         </button>
 
         <!-- Nút 3: Bộ sưu tập -->
-        <button type="button" class="btn-action" id="btnCollection">
+        <button type="button" class="btn-action" id="btnCollection" title="Bộ sưu tập">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
           </svg>
-          BỘ SƯU TẬP
+          <span class="btn-text">BỘ SƯU TẬP</span>
         </button>
 
-        <!-- Nút 4: Đổi lõi vũ trụ (Icon được tô màu theo Theme) -->
-        <button type="button" class="btn-action">
+        <!-- Nút 4: Đổi lõi vũ trụ -->
+        <button type="button" class="btn-action" id="btnCycleCore" title="Đổi Lõi Vũ Trụ">
           <svg class="icon-colored" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 2v6h-6"></path>
             <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
             <path d="M3 22v-6h6"></path>
             <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
           </svg>
-          ĐỔI LÕI VŨ TRỤ
+          <span class="btn-text">ĐỔI LÕI VŨ TRỤ</span>
         </button>
       </div>
+    </header>
 
-      <!-- Lớp thông báo đang hoàn thiện (ẩn mặc định) -->
-      <div id="wipOverlay" class="wip-overlay" hidden>
-        <!-- Icon Đồng Hồ SVG thay cho dấu $ -->
-        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--theme-base)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-        <h2>ĐANG DẦN HOÀN THIỆN</h2>
-        <p>Hệ thống lõi đang được cấu hình cho module này.</p>
-      </div>
-
-      <!-- Khung hiển thị cốt lõi (Radar) -->
-      <div class="radar-wrap" id="radarWrap">
-        <div class="radar-core" id="radarCore">
-          <!-- Hào quang mập mờ (Pulse) -->
-          <div class="radar-core-glow"></div>
-          <!-- Vùng che tâm -->
-          <div class="radar-core-base"></div>
-          <!-- Icon tâm -->
-          <div class="radar-core-icon">
-            <svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="currentColor" stroke-width="1.4">
+    <!-- THÂN ỨNG DỤNG (GRID 2 CỘT) -->
+    <div class="app-body">
+      <!-- CỘT TRÁI: BẢNG ĐIỀU KHIỂN SIDEBAR -->
+      <aside class="sidebar mobile-visible" id="leftSidebar">
+        <!-- thanh Tab chuyển đổi Lõi -->
+        <nav class="tabs" role="tablist">
+          <button type="button" class="tab tab-active" role="tab" data-tab="biomnitrix">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
               <polyline points="2 17 12 22 22 17"></polyline>
               <polyline points="2 12 12 17 22 12"></polyline>
             </svg>
+            BIOMNITRIX
+          </button>
+
+          <button type="button" class="tab" role="tab" data-tab="ultimatrix">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            ULTIMATRIX
+          </button>
+
+          <button type="button" class="tab" role="tab" data-tab="chaquetrix">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            CHAQUETRIX
+          </button>
+        </nav>
+
+        <!-- PANEL ĐIỀU KHIỂN CHÍNH -->
+        <section class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title" id="panelTitle">
+              <span class="panel-title-icon" aria-hidden="true">✦</span>CHUỖI GEN ĐA HỢP
+            </h2>
+            <div class="panel-controls">
+              <!-- Nút Xúc Xắc Nâng Cấp -->
+              <button type="button" class="icon-btn btn-dice" id="btnDice" title="Ngẫu nhiên hóa">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="3" ry="3"/>
+                  <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+                  <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/>
+                  <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                  <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/>
+                  <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/>
+                </svg>
+              </button>
+              <!-- Stepper Tăng Giảm Số Ô ADN -->
+              <div class="stepper" id="slotStepper">
+                <button type="button" class="stepper-btn" id="btnSlotMinus">-</button>
+                <span class="stepper-value" id="slotCountDisplay">2</span>
+                <button type="button" class="stepper-btn" id="btnSlotPlus">+</button>
+              </div>
+            </div>
           </div>
-          <div class="radar-core-status">ĐANG HOẠT ĐỘNG</div>
+
+          <!-- LƯỚI ADN SLOTS -->
+          <div class="dna-grid" id="dnaGrid"></div>
+
+          <!-- MENU PHỤ RENDER ĐỘNG DÀNH RIÊNG CHO TỪNG TAB -->
+          <div class="subpanel-container" id="subpanelContainer"></div>
+        </section>
+
+        <!-- NÚT THỰC THI ACTION -->
+        <button type="button" class="process-btn" id="btnProcess">
+          <svg id="btnProcessIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 17 22 12"></polyline>
+          </svg>
+          <span id="btnProcessText">DUNG HỢP ADN</span>
+        </button>
+      </aside>
+
+      <!-- CỘT PHẢI: MÀN HÌNH HIỂN THỊ KẾT QUẢ / RADAR -->
+      <main class="main-view mobile-hidden" id="rightPanel">
+        <!-- KẾT QUẢ HIỂN THỊ -->
+        <div id="fusionResult" class="fusion-card" hidden></div>
+
+        <!-- HIỂN THỊ RADAR CORE -->
+        <div class="radar-wrap" id="radarWrap">
+          <div class="radar-core" id="radarCore">
+            <div class="radar-core-glow"></div>
+            <div class="radar-core-base"></div>
+            <div class="radar-core-icon" id="radarCoreIcon">
+              <svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="currentColor" stroke-width="1.4">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 17 22 12"></polyline>
+              </svg>
+            </div>
+            <div class="radar-core-status" id="radarCoreStatus">ĐANG HOẠT ĐỘNG</div>
+          </div>
         </div>
+      </main>
+    </div>
+
+    <!-- MOBILE BOTTOM NAVIGATION BAR -->
+    <nav class="mobile-bottom-nav" aria-label="Thanh điều hướng di động">
+      <button type="button" class="mobile-nav-btn active" id="navBtnControl">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="21" x2="4" y2="14"></line>
+          <line x1="4" y1="10" x2="4" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12" y2="3"></line>
+          <line x1="20" y1="21" x2="20" y2="16"></line>
+          <line x1="20" y1="12" x2="20" y2="3"></line>
+          <line x1="1" y1="14" x2="7" y2="14"></line>
+          <line x1="9" y1="8" x2="15" y2="8"></line>
+          <line x1="17" y1="16" x2="23" y2="16"></line>
+        </svg>
+        <span>Điều Khiển</span>
+      </button>
+      <button type="button" class="mobile-nav-btn" id="navBtnResult">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        <span>Kết Quả</span>
+      </button>
+    </nav>
+
+    <!-- MODAL CHỌN ALIEN / BỘ SƯU TẬP -->
+    <div id="modalOverlay" class="modal-overlay" hidden>
+      <div class="modal-container">
+        <header class="modal-header">
+          <h3 id="modalTitle">NẠP MÃ GEN ALIEN</h3>
+          <button type="button" class="modal-close-btn" id="btnModalClose">&times;</button>
+        </header>
+        <div class="modal-grid" id="modalGrid"></div>
       </div>
-    </main>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast" hidden></div>
   </div>
-  <script type="module" src="./script.js"></script>
+
+  <script src="./script.js"></script>
 </body>
 </html>
