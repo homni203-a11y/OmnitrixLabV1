@@ -7,12 +7,12 @@
    1. MÔ PHỎNG DỮ LIỆU GEN ALIEN & FUSION ALGORITHM
    ========================================================================== */
 const ALIENS_DATA = [
-  { id: 1, name: "Heatblast", species: "Pyronite", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png", stats: { power: 8, speed: 6, durability: 7, intelligence: 6, energy: 9 } },
-  { id: 2, name: "Four Arms", species: "Tetramand", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/68.png", stats: { power: 10, speed: 5, durability: 9, intelligence: 4, energy: 5 } },
-  { id: 3, name: "XLR8", species: "Kineceleran", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", stats: { power: 5, speed: 10, durability: 5, intelligence: 7, energy: 6 } },
-  { id: 4, name: "Diamondhead", species: "Petrosapien", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/95.png", stats: { power: 8, speed: 5, durability: 10, intelligence: 6, energy: 7 } },
-  { id: 5, name: "Upgrade", species: "Galvanic Mechamorph", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/137.png", stats: { power: 6, speed: 7, durability: 7, intelligence: 9, energy: 9 } },
-  { id: 6, name: "Ghostfreak", species: "Ectonurite", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/93.png", stats: { power: 6, speed: 7, durability: 6, intelligence: 8, energy: 8 } }
+  { id: 1, name: "Heatblast", species: "Pyronite", image: "https://static.wikia.nocookie.net/ben10/images/2/20/Heatblast_omniverse_official.png/revision/latest?cb=20230814111634", stats: { power: 8, speed: 6, durability: 7, intelligence: 6, energy: 9 } },
+  { id: 2, name: "Four Arms", species: "Tetramand", image: "https://static.wikia.nocookie.net/ben10/images/d/d0/Four_arms_os_render.png/revision/latest?cb=20251012081022", stats: { power: 10, speed: 5, durability: 9, intelligence: 4, energy: 5 } },
+  { id: 3, name: "XLR8", species: "Kineceleran", image: "https://static.wikia.nocookie.net/ben10/images/5/57/XLR8_OV2.png/revision/latest?cb=20240223125033", stats: { power: 5, speed: 10, durability: 5, intelligence: 7, energy: 6 } },
+  { id: 4, name: "Diamondhead", species: "Petrosapien", image: "https://static.wikia.nocookie.net/ben10/images/2/2c/Diamondhead_oficial.png/revision/latest?cb=20230814094606", stats: { power: 8, speed: 5, durability: 10, intelligence: 6, energy: 7 } },
+  { id: 5, name: "Upgrade", species: "Galvanic Mechamorph", image: "https://static.wikia.nocookie.net/ben10/images/7/75/OV_Upgrade.png/revision/latest?cb=20210105173649", stats: { power: 6, speed: 7, durability: 7, intelligence: 9, energy: 9 } },
+  { id: 6, name: "Ghostfreak", species: "Ectonurite", image: "https://static.wikia.nocookie.net/ben10/images/6/6d/Ghostfreak_ov_official.png/revision/latest?cb=20210515171015", stats: { power: 6, speed: 7, durability: 6, intelligence: 8, energy: 8 } }
 ];
 
 /* ==========================================================================
