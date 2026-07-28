@@ -557,33 +557,33 @@ button {
   }
 }
 
-.dna-core {
+.radar-core {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
 }
 
-.dna-core-icon {
+.radar-core-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--neon);
   animation: float 3.2s ease-in-out infinite;
-  /* Hiệu ứng phát sáng mờ ảo (hazy glow) nhiều lớp quanh icon trung tâm */
-  filter: drop-shadow(0 0 10px var(--neon-glow)) drop-shadow(0 0 26px var(--neon-dim))
-    drop-shadow(0 0 48px rgba(29, 242, 165, 0.22));
+  /* Hiệu ứng phát sáng mập mờ (hazy glow) quanh icon trung tâm */
+  filter: drop-shadow(0 0 15px rgba(29, 242, 165, 0.6));
 }
 
-.dna-core-status {
+.radar-core-status {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 3.5px;
   text-transform: uppercase;
   color: var(--text-secondary);
+  text-align: center;
   animation: statusPulse 2.6s ease-in-out infinite;
 }
 
