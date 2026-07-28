@@ -3,55 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lõi Omnitrix</title>
+  <title>Lõi Omnitrix - Hệ Thống Nâng Cấp</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
-<body>
+<body class="theme-biomnitrix">
   <!-- ========================= GLOBAL BACKGROUND ========================= -->
   <div class="global-bg" aria-hidden="true">
     <div class="global-grid"></div>
     <div class="global-radar">
-      <div class="g-ring g-ring-1"></div>
-      <div class="g-ring g-ring-2"></div>
-      <div class="g-ring g-ring-3"></div>
+      <div class="g-ring g-ring-outer"></div>
+      <div class="g-ring g-ring-inner"></div>
     </div>
   </div>
 
   <div id="app" class="app-shell">
 
-    <!-- ========================= CỘT TRÁI: SIDEBAR ========================= -->
+    <!-- ========================= CỘT TRÁI: KHUNG ĐIỀU KHIỂN ========================= -->
     <aside class="sidebar">
-
       <header class="sidebar-header">
         <div class="brand">
-          <span class="brand-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6">
-              <rect x="6" y="6" width="12" height="12" rx="1.5"/>
-              <rect x="9" y="9" width="6" height="6" rx="0.5"/>
-              <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>
-            </svg>
-          </span>
+          <!-- Viền tròn ôm trọn icon lõi -->
+          <div class="brand-icon-wrap">
+            <span class="brand-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6">
+                <rect x="6" y="6" width="12" height="12" rx="1.5"/>
+                <rect x="9" y="9" width="6" height="6" rx="0.5"/>
+                <path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>
+              </svg>
+            </span>
+          </div>
           <div class="brand-text">
-            <h1 class="brand-title">LÕI OMNITRIX</h1>
+            <h1 class="brand-title">LÕI OMNITRIX <span class="badge-team">TỔ 3</span></h1>
             <p class="brand-subtitle">USER_ID // TENNYSON</p>
           </div>
         </div>
 
+        <!-- Bổ sung 4 nút tính năng góc trên phải -->
         <div class="header-actions">
+          <button type="button" class="btn btn-outline">HỆ THỐNG</button>
+          <button type="button" class="btn btn-outline">CÀI ĐẶT</button>
           <button type="button" class="btn btn-outline" id="btnArena">ĐẤU TRƯỜNG</button>
           <button type="button" class="btn btn-outline" id="btnCollection">BỘ SƯU TẬP</button>
         </div>
       </header>
 
-      <!-- Tabs với Icon thuần SVG -->
-      <nav class="tabs" role="tablist" aria-label="Chế độ dung hợp">
+      <!-- Tabs với SVG Icon -->
+      <nav class="tabs" role="tablist">
         <button type="button" class="tab" role="tab" data-tab="ultimate">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
           </svg>
           ULTIMATE
         </button>
-        <button type="button" class="tab tab-active" role="tab" data-tab="biomnitrix" aria-selected="true">
+        <button type="button" class="tab tab-active" role="tab" data-tab="biomnitrix">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
             <polyline points="2 17 12 22 22 17"></polyline>
@@ -71,61 +75,57 @@
         <div class="panel-header">
           <h2 class="panel-title"><span class="panel-title-icon" aria-hidden="true">✦</span>CHUỖI GEN ĐA HỢP</h2>
           <div class="panel-controls">
-            <button type="button" class="icon-btn" id="btnDice" title="Ngẫu nhiên hóa">
-              <span aria-hidden="true">⚁</span>
-            </button>
+            <button type="button" class="icon-btn" id="btnDice" title="Ngẫu nhiên hóa">⚁</button>
             <div class="stepper" id="slotStepper">
-              <button type="button" class="stepper-btn" id="btnSlotMinus" aria-label="Giảm số ô">-</button>
+              <button type="button" class="stepper-btn" id="btnSlotMinus">-</button>
               <span class="stepper-value" id="slotCountDisplay">2</span>
-              <button type="button" class="stepper-btn" id="btnSlotPlus" aria-label="Tăng số ô">+</button>
+              <button type="button" class="stepper-btn" id="btnSlotPlus">+</button>
             </div>
           </div>
         </div>
-        <div class="dna-grid" id="dnaGrid" aria-live="polite"></div>
+        <div class="dna-grid" id="dnaGrid"></div>
       </section>
 
-      <button type="button" class="process-btn" id="btnProcess">ĐANG XỬ LÝ...</button>
+      <button type="button" class="process-btn" id="btnProcess">DUNG HỢP ADN</button>
     </aside>
 
-    <!-- ========================= CỘT PHẢI: MAIN VIEW ========================= -->
-    <main class="main-view">
-      <div class="radar-wrap">
-        <div class="radar-core" id="radarCore" aria-live="polite">
-          <!-- Hiệu ứng Glow Pulse -->
-          <div class="radar-core-glow" aria-hidden="true"></div>
+    <!-- ========================= CỘT PHẢI: KHUNG ĐỘC LẬP ========================= -->
+    <main class="main-view" id="rightPanel">
+      
+      <!-- Lớp thông báo đang hoàn thiện (ẩn mặc định) -->
+      <div id="wipOverlay" class="wip-overlay" hidden>
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--theme-base)" stroke-width="1.5">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        <h2>ĐANG DẦN HOÀN THIỆN</h2>
+        <p>Hệ thống lõi đang được cấu hình cho module này.</p>
+      </div>
 
-          <!-- Base che tâm khớp màu var(--bg) -->
-          <div class="radar-core-base" aria-hidden="true"></div>
-
-          <!-- Icon trung tâm -->
-          <div class="radar-core-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Khung hiển thị cốt lõi -->
+      <div class="radar-wrap" id="radarWrap">
+        <div class="radar-core" id="radarCore">
+          <!-- Hào quang mập mờ (Pulse) -->
+          <div class="radar-core-glow"></div>
+          <!-- Vùng che tâm -->
+          <div class="radar-core-base"></div>
+          <!-- Icon tâm -->
+          <div class="radar-core-icon">
+            <svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="currentColor" stroke-width="1.4">
               <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
               <polyline points="2 17 12 22 22 17"></polyline>
               <polyline points="2 12 12 17 22 12"></polyline>
             </svg>
           </div>
-
-          <!-- Dòng trạng thái -->
-          <div class="radar-core-status">CHỜ KHỞI ĐỘNG</div>
+          <div class="radar-core-status">ĐANG HOẠT ĐỘNG</div>
         </div>
       </div>
+      
+      <!-- Bảng kết quả -->
       <div class="fusion-result" id="fusionResult" hidden></div>
     </main>
   </div>
 
-  <!-- ========================= MODAL ========================= -->
-  <div class="modal-overlay" id="modalOverlay" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-header">
-        <h3 id="modalTitle">NẠP MÃ GEN</h3>
-        <button type="button" class="modal-close" id="btnModalClose" aria-label="Đóng">✕</button>
-      </div>
-      <div class="modal-grid" id="modalGrid"></div>
-    </div>
-  </div>
-
   <div class="toast" id="toast" hidden></div>
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="./script.js"></script>
 </body>
 </html>
