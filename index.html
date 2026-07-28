@@ -6,11 +6,27 @@
   <title>Lõi Omnitrix - Hệ Thống Nâng Cấp Cao Cấp</title>
   <link rel="stylesheet" href="./style.css" />
   <style>
-    /* CSS bổ sung để đảm bảo icon ở trung tâm radar luôn được phóng to 
-       cho cả Biomnitrix, Ultimatrix và Chaquetrix khi JavaScript render lại */
+    /* CSS Tinh chỉnh Icon Trung Tâm Radar (Radar Core Icon) */
+    #radarCoreIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+    
     #radarCoreIcon svg {
-      width: 150px !important;
-      height: 150px !important;
+      /* Thu nhỏ icon lại, chừa khoảng 5% margin xung quanh (90% width/height) */
+      width: 90% !important;
+      height: 90% !important;
+      
+      /* Cố định độ dày nét vẽ vừa phải trong hệ quy chiếu viewBox 24x24 */
+      stroke-width: 1.2 !important; 
+      
+      /* Sửa dứt điểm lỗi vỡ/nhọn góc của Biomnitrix và Chaquetrix khi phóng to */
+      stroke-linecap: round !important;
+      stroke-linejoin: round !important;
+      
       transition: all 0.3s ease;
     }
   </style>
@@ -154,10 +170,9 @@
 
         <!-- NÚT THỰC THI ACTION -->
         <button type="button" class="process-btn" id="btnProcess">
-          <svg id="btnProcessIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <svg id="btnProcessIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
             <polyline points="2 17 12 22 22 17"></polyline>
-            <!-- Đã sửa lỗi thiếu tọa độ 12 ở đây -->
             <polyline points="2 12 12 17 22 12"></polyline>
           </svg>
           <span id="btnProcessText">DUNG HỢP ADN</span>
@@ -175,11 +190,9 @@
             <div class="radar-core-glow"></div>
             <div class="radar-core-base"></div>
             <div class="radar-core-icon" id="radarCoreIcon">
-              <!-- Đã chỉnh lại kích thước width="150" height="150" tại thẻ SVG này -->
-              <svg viewBox="0 0 24 24" width="150" height="150" fill="none" stroke="currentColor" stroke-width="1.4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                 <polyline points="2 17 12 22 22 17"></polyline>
-                <!-- Đã sửa lỗi thiếu tọa độ 12 ở đây -->
                 <polyline points="2 12 12 17 22 12"></polyline>
               </svg>
             </div>
