@@ -6,28 +6,34 @@
   <title>Lõi Omnitrix - Hệ Thống Nâng Cấp Cao Cấp</title>
   <link rel="stylesheet" href="./style.css" />
   <style>
-    /* CSS Tinh chỉnh Icon Trung Tâm Radar (Radar Core Icon) */
+    /* BẢN VÁ LỖI: HIỂN THỊ ICON RADAR */
+    
     #radarCoreIcon {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
       height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
     }
     
     #radarCoreIcon svg {
-      /* Thu nhỏ icon lại, chừa khoảng 5% margin xung quanh (90% width/height) */
-      width: 90% !important;
-      height: 90% !important;
-      
-      /* Cố định độ dày nét vẽ vừa phải trong hệ quy chiếu viewBox 24x24 */
-      stroke-width: 1.2 !important; 
-      
-      /* Sửa dứt điểm lỗi vỡ/nhọn góc của Biomnitrix và Chaquetrix khi phóng to */
+      /* Giảm kích thước xuống 35% để nằm gọn hoàn toàn trong lõi đen (cách viền ~5%) */
+      width: 35% !important;
+      height: 35% !important;
+      transition: all 0.3s ease;
+      overflow: visible; /* Đảm bảo các góc bo tròn không bị cắt lẹm */
+    }
+
+    /* Kỹ thuật khóa nét vẽ (Chống phình to và méo mó icon) */
+    #radarCoreIcon svg * {
+      vector-effect: non-scaling-stroke !important; /* Khóa tỷ lệ nét, không cho phóng to theo khung */
+      stroke-width: 2.5px !important; /* Cố định độ dày nét vẽ thực tế trên màn hình là 2.5px */
       stroke-linecap: round !important;
       stroke-linejoin: round !important;
-      
-      transition: all 0.3s ease;
     }
   </style>
 </head>
@@ -190,6 +196,7 @@
             <div class="radar-core-glow"></div>
             <div class="radar-core-base"></div>
             <div class="radar-core-icon" id="radarCoreIcon">
+              <!-- Inline width/height đã được gỡ bỏ để nhường quyền kiểm soát tuyệt đối cho khối CSS phía trên -->
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                 <polyline points="2 17 12 22 22 17"></polyline>
