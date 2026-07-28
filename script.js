@@ -1,33 +1,98 @@
 /**
  * script.js - Core Omnitrix System
- * Senior Full-stack Architecture: State Management, Clean DOM Manipulation, Micro-interactions & Audio Engine.
+ * Synchronized with official Ben 10 Alien Assets & Hourglass Core SVG Icons.
  */
 
 /* ==========================================================================
-   1. MÔ PHỎNG DỮ LIỆU GEN ALIEN & FUSION ALGORITHM
+   1. DỮ LIỆU GEN ALIEN BEN 10 (ẢNH CHUẨN BEN 10 SPECIES)
    ========================================================================== */
 const ALIENS_DATA = [
-  { id: 1, name: "Heatblast", species: "Pyronite", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png", stats: { power: 8, speed: 6, durability: 7, intelligence: 6, energy: 9 } },
-  { id: 2, name: "Four Arms", species: "Tetramand", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/68.png", stats: { power: 10, speed: 5, durability: 9, intelligence: 4, energy: 5 } },
-  { id: 3, name: "XLR8", species: "Kineceleran", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", stats: { power: 5, speed: 10, durability: 5, intelligence: 7, energy: 6 } },
-  { id: 4, name: "Diamondhead", species: "Petrosapien", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/95.png", stats: { power: 8, speed: 5, durability: 10, intelligence: 6, energy: 7 } },
-  { id: 5, name: "Upgrade", species: "Galvanic Mechamorph", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/137.png", stats: { power: 6, speed: 7, durability: 7, intelligence: 9, energy: 9 } },
-  { id: 6, name: "Ghostfreak", species: "Ectonurite", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/93.png", stats: { power: 6, speed: 7, durability: 6, intelligence: 8, energy: 8 } }
+  { 
+    id: 1, 
+    name: "Heatblast", 
+    species: "Pyronite", 
+    image: "https://vignette.wikia.nocookie.net/ben10/images/2/23/Heatblast_OV_Render.png", 
+    stats: { power: 8, speed: 6, durability: 7, intelligence: 6, energy: 9 } 
+  },
+  { 
+    id: 2, 
+    name: "Four Arms", 
+    species: "Tetramand", 
+    image: "https://vignette.wikia.nocookie.net/ben10/images/e/e0/Fourarms_ov_pose.png", 
+    stats: { power: 10, speed: 5, durability: 9, intelligence: 4, energy: 5 } 
+  },
+  { 
+    id: 3, 
+    name: "XLR8", 
+    species: "Kineceleran", 
+    image: "https://vignette.wikia.nocookie.net/ben10/images/c/c2/XLR8_OV_Render.png", 
+    stats: { power: 5, speed: 10, durability: 5, intelligence: 7, energy: 6 } 
+  },
+  { 
+    id: 4, 
+    name: "Diamondhead", 
+    species: "Petrosapien", 
+    image: "https://vignette.wikia.nocookie.net/ben10/images/3/30/Diamondhead_OV_Pose.png", 
+    stats: { power: 8, speed: 5, durability: 10, intelligence: 6, energy: 7 } 
+  },
+  { 
+    id: 5, 
+    name: "Upgrade", 
+    species: "Galvanic Mechamorph", 
+    image: "https://vignette.wikia.nocookie.net/ben10/images/8/87/Upgrade_OV_Render.png", 
+    stats: { power: 6, speed: 7, durability: 7, intelligence: 9, energy: 9 } 
+  },
+  { 
+    id: 6, 
+    name: "Ghostfreak", 
+    species: "Ectonurite", 
+    image: "https://vignette.wikia.nocookie.net/ben10/images/b/b5/Ghostfreak_OV_Official.png", 
+    stats: { power: 6, speed: 7, durability: 6, intelligence: 8, energy: 8 } 
+  }
 ];
 
 /* ==========================================================================
-   2. HỆ THỐNG ÂM THANH SCI-FI (WEB AUDIO API)
+   2. SVG ICONS CHUẨN BIỂU TƯỢNG OMNITRIX / BIOMNITRIX (HÌNH ĐỒNG HỒ CÁT)
+   ========================================================================== */
+// Icon Đồng Hồ Cát Biomnitrix Đôi / Classic Omnitrix Dial
+const OMNITRIX_ICON_SVG = `
+  <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="7" fill="rgba(0,0,0,0.45)"/>
+    <!-- Hourglass shape inner pattern -->
+    <polygon points="18,18 82,18 50,50" fill="currentColor" />
+    <polygon points="18,82 82,82 50,50" fill="currentColor" />
+    <circle cx="50" cy="50" r="7" fill="#0a0c10" stroke="currentColor" stroke-width="3"/>
+  </svg>
+`;
+
+const ULTIMATRIX_ICON_SVG = `
+  <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6" stroke-dasharray="8 4"/>
+    <polygon points="12,12 88,12 50,48" fill="currentColor" />
+    <polygon points="12,88 88,88 50,52" fill="currentColor" />
+    <path d="M50 10 L58 32 L50 26 L42 32 Z" fill="currentColor"/>
+    <path d="M50 90 L58 68 L50 74 L42 68 Z" fill="currentColor"/>
+  </svg>
+`;
+
+const CHAQUETRIX_ICON_SVG = `
+  <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="7"/>
+    <polygon points="22,22 78,22 50,50" fill="currentColor" />
+    <polygon points="22,78 78,78 50,50" fill="currentColor" />
+    <path d="M50 43 C47 38, 40 40, 40 46 C40 52, 50 58, 50 58 C50 58, 60 52, 60 46 C60 40, 53 38, 50 43 Z" fill="#ff539b" stroke="#ffffff" stroke-width="1.5"/>
+  </svg>
+`;
+
+/* ==========================================================================
+   3. HỆ THỐNG ÂM THANH SCI-FI (WEB AUDIO API)
    ========================================================================== */
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 
 function initAudio() {
-  if (!audioCtx) {
-    audioCtx = new AudioContext();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
+  if (!audioCtx) audioCtx = new AudioContext();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
 }
 
 function playSciFiBeep() {
@@ -77,44 +142,43 @@ function playDiceRollSound() {
 }
 
 /* ==========================================================================
-   3. STATE MANAGEMENT
+   4. STATE MANAGEMENT & CONFIG
    ========================================================================== */
 const state = {
-  activeTab: 'biomnitrix', // 'biomnitrix' | 'ultimatrix' | 'chaquetrix'
-  slotCount: 2,           // 2-5 (Chỉ áp dụng cho Biomnitrix)
+  activeTab: 'biomnitrix',
+  slotCount: 2,
   selectedAliens: [null, null],
   activeModalSlotIndex: null,
-  bodyProportions: 50,     // Dành riêng cho Chaquetrix
-  mobileActiveView: 'control' // 'control' (Cột trái) | 'result' (Cột phải)
+  bodyProportions: 50,
+  mobileActiveView: 'control'
 };
 
-// Cấu hình Header theo Tab
 const HEADER_CONFIG = {
   biomnitrix: {
     title: 'BIOMNITRIX',
     subtitle: 'USER_ID // Ben Tennyson',
-    icon: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 17 22 12"></polyline></svg>`,
+    icon: OMNITRIX_ICON_SVG,
     processText: 'DUNG HỢP ADN',
-    processIcon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 17 22 12"></polyline></svg>`
+    processIcon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`
   },
   ultimatrix: {
     title: 'ULTIMATRIX',
     subtitle: 'USER_ID // Albedo',
-    icon: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
+    icon: ULTIMATRIX_ICON_SVG,
     processText: 'KHỞI ĐỘNG TIẾN HÓA',
-    processIcon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`
+    processIcon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`
   },
   chaquetrix: {
     title: 'CHAQUETRIX',
     subtitle: 'USER_ID // Haremic',
-    icon: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+    icon: CHAQUETRIX_ICON_SVG,
     processText: 'TIẾN HÀNH TRIỆU HỒI HAREM',
-    processIcon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
+    processIcon: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
   }
 };
 
 /* ==========================================================================
-   4. DOM ELEMENTS
+   5. DOM ELEMENTS
    ========================================================================== */
 const brandIconWrap = document.getElementById('brandIconWrap');
 const brandTitle = document.getElementById('brandTitle');
@@ -131,7 +195,6 @@ const dnaGrid = document.getElementById('dnaGrid');
 const subpanelContainer = document.getElementById('subpanelContainer');
 
 const btnProcess = document.getElementById('btnProcess');
-const btnProcessIcon = document.getElementById('btnProcessIcon');
 const btnProcessText = document.getElementById('btnProcessText');
 
 const modalOverlay = document.getElementById('modalOverlay');
@@ -152,7 +215,7 @@ const btnCollection = document.getElementById('btnCollection');
 let toastTimer = null;
 
 /* ==========================================================================
-   5. RENDER & UI LOGIC
+   6. RENDER LOGIC
    ========================================================================== */
 function showToast(msg, isError = false) {
   clearTimeout(toastTimer);
@@ -162,46 +225,44 @@ function showToast(msg, isError = false) {
   toastTimer = setTimeout(() => { toast.hidden = true; }, 2800);
 }
 
-// MODULE 2: Cập nhật Header & Theme Engine
+// Cập nhật Header Logo & Cột Phải Radar Core với Icon Omnitrix Mới
 function updateHeaderAndTheme(tabKey) {
   const config = HEADER_CONFIG[tabKey];
   if (!config) return;
 
-  // Cập nhật DOM Header Góc Trái
+  // 1. Cập nhật Logo Góc Trái
   brandIconWrap.innerHTML = config.icon;
   brandTitle.textContent = config.title;
   brandSubtitle.textContent = config.subtitle;
 
-  // Cập nhật Theme Body
+  // 2. Cập nhật Icon ở Trung Tâm Cột Phải (Radar Core)
+  const radarIcon = document.getElementById('radarCoreIcon');
+  if (radarIcon) {
+    radarIcon.innerHTML = config.icon;
+  }
+
+  // 3. Cập nhật Theme
   document.body.className = `theme-${tabKey}`;
 
-  // Đồng bộ Active trạng thái Tab trên Cột Trái
+  // 4. Đồng bộ Tab Active
   tabs.forEach(t => {
-    const active = t.dataset.tab === tabKey;
-    t.classList.toggle('tab-active', active);
+    t.classList.toggle('tab-active', t.dataset.tab === tabKey);
   });
 
-  // Cập nhật Nút Action dưới cùng
+  // 5. Cập nhật Nút Thực Thi Action
   btnProcessText.textContent = config.processText;
   btnProcess.querySelector('svg').outerHTML = config.processIcon;
-
-  // Cập nhật Radar Center Icon
-  const radarIcon = document.getElementById('radarCoreIcon');
-  if (radarIcon) radarIcon.innerHTML = config.icon;
 }
 
-// SWITCH TAB CORE LOGIC
 function switchTab(tabKey) {
   state.activeTab = tabKey;
   updateHeaderAndTheme(tabKey);
 
   if (tabKey === 'ultimatrix' || tabKey === 'chaquetrix') {
-    // Khóa cứng ở 1 ô ADN
     state.slotCount = 1;
     state.selectedAliens = [state.selectedAliens[0] || null];
     slotStepper.style.display = 'none';
   } else {
-    // Biomnitrix: Mở lại Stepper
     slotStepper.style.display = 'flex';
     if (state.selectedAliens.length < 2) {
       state.slotCount = 2;
@@ -213,7 +274,6 @@ function switchTab(tabKey) {
   renderSubPanels();
 }
 
-// RENDER ADN SLOTS
 function renderDNAGrid() {
   dnaGrid.innerHTML = '';
   for (let i = 0; i < state.slotCount; i++) {
@@ -249,7 +309,6 @@ function renderDNAGrid() {
   btnSlotPlus.disabled = state.slotCount >= 5;
 }
 
-// MODULE 4: RENDER MENU PHỤ DÀNH RIÊNG CHO TỪNG TAB
 function renderSubPanels() {
   subpanelContainer.innerHTML = '';
 
@@ -301,10 +360,8 @@ function renderSubPanels() {
 }
 
 /* ==========================================================================
-   6. EVENT HANDLERS & INTERACTIONS
+   7. EVENT LISTENERS
    ========================================================================== */
-
-// MODULE 2: Nút "ĐỔI LÕI VŨ TRỤ" (Vòng lặp Cycle Loop)
 btnCycleCore.addEventListener('click', () => {
   const sequence = ['biomnitrix', 'ultimatrix', 'chaquetrix'];
   const currentIndex = sequence.indexOf(state.activeTab);
@@ -313,14 +370,10 @@ btnCycleCore.addEventListener('click', () => {
   showToast(`Đã chuyển sang Lõi ${HEADER_CONFIG[nextTab].title}`);
 });
 
-// Chuyển Tab khi Click trực tiếp
 tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    switchTab(tab.dataset.tab);
-  });
+  tab.addEventListener('click', () => switchTab(tab.dataset.tab));
 });
 
-// Tăng / Giảm ô ADN (Biomnitrix)
 btnSlotPlus.addEventListener('click', () => {
   if (state.slotCount < 5) {
     state.slotCount++;
@@ -337,16 +390,12 @@ btnSlotMinus.addEventListener('click', () => {
   }
 });
 
-// MODULE 3: Nút Xúc Xắc (Randomizer) + Rung Lắc + Audio
 btnDice.addEventListener('click', () => {
   playDiceRollSound();
-
-  // Animation rung lắc khung nút
   btnDice.classList.remove('btn-dice-shake');
-  void btnDice.offsetWidth; // Force Reflow
+  void btnDice.offsetWidth;
   btnDice.classList.add('btn-dice-shake');
 
-  // Logic Chọn Ngẫu Nhiên không trùng lặp
   const shuffled = [...ALIENS_DATA].sort(() => 0.5 - Math.random());
   for (let i = 0; i < state.slotCount; i++) {
     state.selectedAliens[i] = shuffled[i] || null;
@@ -355,7 +404,6 @@ btnDice.addEventListener('click', () => {
   showToast("Đã ngẫu nhiên hóa chuỗi gen ADN!");
 });
 
-// Click vào ô ADN để Mở Modal Nạp Gen hoặc Xóa
 dnaGrid.addEventListener('click', (e) => {
   const removeBtn = e.target.closest('.slot-remove-btn');
   if (removeBtn) {
@@ -368,12 +416,10 @@ dnaGrid.addEventListener('click', (e) => {
 
   const slot = e.target.closest('.dna-slot');
   if (slot) {
-    const idx = Number(slot.dataset.index);
-    openModal(idx);
+    openModal(Number(slot.dataset.index));
   }
 });
 
-// MODAL SYSTEM
 function openModal(slotIndex = null) {
   state.activeModalSlotIndex = slotIndex;
   modalTitle.textContent = slotIndex !== null ? `NẠP MÃ GEN — ADN ${slotIndex + 1}` : "BỘ SƯU TẬP ALIEN";
@@ -414,7 +460,6 @@ modalGrid.addEventListener('click', (e) => {
 btnModalClose.addEventListener('click', () => modalOverlay.hidden = true);
 btnCollection.addEventListener('click', () => openModal(null));
 
-// PROCESS ACTION BUTTON (Dung Hợp / Tiến Hóa / Triệu Hồi)
 btnProcess.addEventListener('click', () => {
   const selected = state.selectedAliens.filter(Boolean);
 
@@ -464,7 +509,6 @@ btnProcess.addEventListener('click', () => {
   showToast("Thao tác hoàn tất thành công!");
 });
 
-// MODULE 1: MOBILE BOTTOM NAV LOGIC (Đổi Cột Trái / Cột Phải)
 function switchMobileView(view) {
   state.mobileActiveView = view;
   if (view === 'control') {
@@ -483,17 +527,16 @@ function switchMobileView(view) {
 navBtnControl.addEventListener('click', () => switchMobileView('control'));
 navBtnResult.addEventListener('click', () => switchMobileView('result'));
 
-// Sound Beep Toàn Cục
 document.addEventListener('click', (e) => {
   if (e.target.closest('button') || e.target.closest('.tab') || e.target.closest('.dna-slot')) {
     playSciFiBeep();
   }
 });
 
-btnArena.addEventListener('click', () => showToast("Đang kết nối Đấu Trường Villtrum..."));
+btnArena.addEventListener('click', () => showToast("Đang kết nối Đấu Trường Vilgax..."));
 
 /* ==========================================================================
-   7. INITIALIZATION
+   8. INITIALIZATION
    ========================================================================== */
 function init() {
   switchTab('biomnitrix');
