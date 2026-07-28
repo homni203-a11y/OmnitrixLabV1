@@ -557,83 +557,72 @@ button {
   }
 }
 
+/* ---- Lõi trung tâm: glow + icon + dòng trạng thái ----
+   .radar-core phủ kín .radar-wrap (inset: 0) nên tâm của nó trùng tuyệt đối
+   với tâm 4 vòng radar. Glow và icon dùng chung kỹ thuật căn giữa
+   (top/left 50% + translate(-50%,-50%)) nên luôn đồng tâm với nhau và với
+   .radar-core — không còn dùng flex-column như trước (vốn khiến icon bị đẩy
+   lệch lên trên do halo + dòng trạng thái nằm cùng cột bên dưới nó). */
 .radar-core {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
 }
 
-.radar-core-icon {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--neon);
-  z-index: 1;
-  /* Icon đứng yên hoàn toàn: không animation, không filter/drop-shadow trên icon */
-}
-
-/* Quầng sáng tỏa tròn (ambient radial glow) phía sau icon — không gắn vào icon
-   bằng filter, mà là một lớp nền riêng để tạo hiệu ứng hào quang mờ ảo hắt
-   ra xung quanh, tách biệt với hình khối sắc nét của icon phía trên nó */
-.radar-core-icon::before {
-  content: "";
+/* Quầng glow trung tâm — đường kính = 46% cạnh .radar-wrap, bằng đúng đường
+   kính vòng nét đứt thứ 2 tính từ trong ra ngoài (radar-ring--r4 là vòng
+   trong cùng = thứ 1, radar-ring--r3 = thứ 2, dùng inset: 27%
+   => 100% - 27%×2 = 46%). Gộp chung 2 lớp glow cũ (quầng 230px sau icon +
+   halo 20px) thành một lớp glow duy nhất, đúng kích thước yêu cầu. */
+.radar-core-glow {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 230px;
-  height: 230px;
+  width: 46%;
+  height: 46%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(29, 242, 165, 0.32) 0%,
-    rgba(29, 242, 165, 0.16) 35%,
-    rgba(29, 242, 165, 0.05) 60%,
-    rgba(29, 242, 165, 0) 75%
+    rgba(29, 242, 165, 0.36) 0%,
+    rgba(29, 242, 165, 0.2) 38%,
+    rgba(29, 242, 165, 0.08) 65%,
+    rgba(29, 242, 165, 0) 100%
   );
-  z-index: -1;
+  z-index: 1;
   pointer-events: none;
 }
 
-/* ---- Hệ thống 2 vòng tròn chồng lớp (halo) — nằm giữa icon và dòng trạng thái ---- */
-.radar-core-halo {
-  position: relative;
-  width: 20px;
-  height: 20px;
-}
-
-/* Vòng dưới (lớp ngoài cùng): trắng, có glow mờ lan tỏa ra ngoài */
-.radar-core-halo-outer {
+/* Icon: căn giữa bằng đúng kỹ thuật của glow nên tâm icon luôn trùng khớp
+   tuyệt đối với tâm glow và tâm toàn bộ hệ vòng radar */
+.radar-core-icon {
   position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 14px 4px rgba(255, 255, 255, 0.55), 0 0 30px 10px rgba(255, 255, 255, 0.25);
-  z-index: 1;
-}
-
-/* Vòng trên (lớp che khuất): cùng kích thước, màu trùng background —
-   phủ kín phần đĩa trắng bên dưới, chỉ để lộ lại viền glow lan tỏa ra ngoài rìa */
-.radar-core-halo-mask {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--bg);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neon);
   z-index: 2;
+  /* Icon đứng yên hoàn toàn: không animation, không filter/drop-shadow trên icon */
 }
 
+/* Dòng trạng thái: neo theo mép dưới của glow (50% + bán kính glow 23%)
+   rồi cộng thêm khoảng cách cố định 22px — luôn cân đối, nằm ngay dưới
+   glow/icon mà không kéo lệch tâm của chúng như cách gap flex trước đây */
 .radar-core-status {
+  position: absolute;
+  top: calc(50% + 23% + 22px);
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 3.5px;
   text-transform: uppercase;
   color: var(--text-secondary);
   text-align: center;
+  white-space: nowrap;
   animation: statusPulse 2.6s ease-in-out infinite;
 }
 
