@@ -1,231 +1,419 @@
-// Đảm bảo file data.js và fusion.js của bạn tồn tại trong cùng thư mục
-import { ALIENS_GOC, STAT_KEYS, STAT_LABELS } from "./data.js";
-import { performFusion } from "./fusion.js";
+/**
+ * main.js
+ * ------------------------------------------------------------------
+ * Entry point (ES Module). Quản lý toàn bộ STATE của ứng dụng, render
+ * lại UI của cột trái (Sidebar) khi state thay đổi, và bắt tất cả các
+ * sự kiện tương tác: chọn/xóa Alien, tăng giảm số ô, random, mở modal,
+ * dung hợp, tải dữ liệu đấu trường.
+ * ------------------------------------------------------------------
+ */
+
+import { fetchAliens, fetchBattleData } from "./api.js";
+import { fuseAliens } from "./fusion.js";
+import { SLOT_LIMITS } from "./data.js";
+
+/* ==========================================================================
+   STATE
+   ========================================================================== */
 
 const state = {
-    selectedForFusion: [],
-    slotCount: 2 // Mặc định 2, tối đa 5
+  allAliens: [], // Toàn bộ Alien tải về từ "API"
+  slotCount: SLOT_LIMITS.DEFAULT, // Số ô hiện tại (2-5)
+  selectedAliens: [], // Mảng song song với số ô: mỗi phần tử là Alien object hoặc null
+  activeModalIndex: null, // Ô đang được nạp gen (null nếu đang ở chế độ Bộ sưu tập / đóng)
+  isCollectionMode: false, // true = modal đang hiển thị dạng "Bộ sưu tập" (chỉ xem)
 };
 
-let resultRadarChart = null;
+let toastTimer = null;
 
-document.addEventListener("DOMContentLoaded", () => {
-    setupCounters();
-    setupRandomizer();
-    renderInventory();
-    renderSlots();
+/* ==========================================================================
+   DOM REFERENCES
+   ========================================================================== */
 
-    document.getElementById("fuse-btn").addEventListener("click", handleFuse);
+const dnaGrid = document.getElementById("dnaGrid");
+const slotCountDisplay = document.getElementById("slotCountDisplay");
+const btnSlotMinus = document.getElementById("btnSlotMinus");
+const btnSlotPlus = document.getElementById("btnSlotPlus");
+const btnDice = document.getElementById("btnDice");
+const btnProcess = document.getElementById("btnProcess");
+const btnArena = document.getElementById("btnArena");
+const btnCollection = document.getElementById("btnCollection");
+const tabs = document.querySelectorAll(".tab");
+
+const modalOverlay = document.getElementById("modalOverlay");
+const modalTitle = document.getElementById("modalTitle");
+const modalGrid = document.getElementById("modalGrid");
+const btnModalClose = document.getElementById("btnModalClose");
+
+const fusionResult = document.getElementById("fusionResult");
+const toast = document.getElementById("toast");
+
+/* ==========================================================================
+   TOAST HELPER
+   ========================================================================== */
+
+function showToast(message, isError = false) {
+  clearTimeout(toastTimer);
+  toast.textContent = message;
+  toast.classList.toggle("toast--error", isError);
+  toast.hidden = false;
+  toastTimer = setTimeout(() => {
+    toast.hidden = true;
+  }, 2800);
+}
+
+/* ==========================================================================
+   RENDER: LƯỚI CÁC Ô ADN (SIDEBAR)
+   ========================================================================== */
+
+function renderEmptySlot(index) {
+  return `
+    <div class="dna-slot dna-slot--empty" data-index="${index}" data-role="empty-slot">
+      <span class="slot-label">ADN ${index + 1}</span>
+
+      <div class="slot-viewfinder" aria-hidden="true">
+        <span class="corner corner--tl"></span>
+        <span class="corner corner--tr"></span>
+        <span class="corner corner--bl"></span>
+        <span class="corner corner--br"></span>
+      </div>
+
+      <div class="slot-empty-center">
+        <span class="slot-empty-arrow">↑</span>
+        <span class="slot-empty-text">NẠP MÃ GEN</span>
+      </div>
+
+      <div class="slot-footer">
+        <div class="slot-size">
+          <span>⛶ SIZE</span>
+          <strong>B.THƯỜNG</strong>
+        </div>
+        <div class="slot-size-blocks">
+          <span class="size-block size-block--active"></span>
+          <span class="size-block size-block--active"></span>
+          <span class="size-block size-block--active"></span>
+          <span class="size-block"></span>
+          <span class="size-block"></span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderFilledSlot(index, alien) {
+  return `
+    <div class="dna-slot dna-slot--filled" data-index="${index}">
+      <div class="slot-filled-header">
+        <span class="slot-alien-name">${alien.name}</span>
+        <button type="button" class="slot-remove-btn" data-index="${index}" data-role="remove-slot" aria-label="Gỡ ${alien.name}">✕</button>
+      </div>
+      <div class="slot-alien-image-wrap">
+        <img class="slot-alien-image" src="${alien.image}" alt="${alien.name}" />
+      </div>
+    </div>
+  `;
+}
+
+function renderSlots() {
+  const html = state.selectedAliens
+    .map((alien, index) => (alien ? renderFilledSlot(index, alien) : renderEmptySlot(index)))
+    .join("");
+
+  dnaGrid.innerHTML = html;
+
+  // Cập nhật hiển thị bộ đếm & trạng thái disabled của nút +/-
+  slotCountDisplay.textContent = String(state.slotCount);
+  btnSlotMinus.disabled = state.slotCount <= SLOT_LIMITS.MIN;
+  btnSlotPlus.disabled = state.slotCount >= SLOT_LIMITS.MAX;
+}
+
+/* ==========================================================================
+   TĂNG / GIẢM SỐ Ô (SLOT COUNT)
+   ========================================================================== */
+
+function setSlotCount(nextCount) {
+  const clamped = Math.max(SLOT_LIMITS.MIN, Math.min(SLOT_LIMITS.MAX, nextCount));
+  if (clamped === state.slotCount) return;
+
+  if (clamped < state.slotCount) {
+    // Nếu giảm số ô, các ô bị cắt bớt mà đang chứa Alien phải được gỡ ra
+    const removed = state.selectedAliens.slice(clamped).filter(Boolean);
+    state.selectedAliens = state.selectedAliens.slice(0, clamped);
+    if (removed.length > 0) {
+      showToast(`Đã gỡ ${removed.length} Alien do giảm số ô ADN.`);
+    }
+  } else {
+    // Nếu tăng số ô, thêm các ô trống mới vào cuối mảng
+    const toAdd = clamped - state.selectedAliens.length;
+    state.selectedAliens = state.selectedAliens.concat(Array(toAdd).fill(null));
+  }
+
+  state.slotCount = clamped;
+  renderSlots();
+}
+
+btnSlotMinus.addEventListener("click", () => setSlotCount(state.slotCount - 1));
+btnSlotPlus.addEventListener("click", () => setSlotCount(state.slotCount + 1));
+
+/* ==========================================================================
+   CLICK VÀO Ô ADN (mở modal nạp gen / gỡ gen)
+   ========================================================================== */
+
+dnaGrid.addEventListener("click", (event) => {
+  const removeBtn = event.target.closest('[data-role="remove-slot"]');
+  if (removeBtn) {
+    event.stopPropagation();
+    const index = Number(removeBtn.dataset.index);
+    removeAlienFromSlot(index);
+    return;
+  }
+
+  const emptySlot = event.target.closest('[data-role="empty-slot"]');
+  if (emptySlot) {
+    const index = Number(emptySlot.dataset.index);
+    openInventoryModal(index);
+  }
 });
 
-// 1. CHỈNH SỐ LƯỢNG SLOT (2 - 5)
-function setupCounters() {
-    const btnInc = document.getElementById("btn-increase");
-    const btnDec = document.getElementById("btn-decrease");
-    const display = document.getElementById("slot-count-display");
-
-    btnInc.addEventListener("click", () => {
-        if (state.slotCount < 5) {
-            state.slotCount++;
-            display.textContent = state.slotCount;
-            renderSlots();
-        }
-    });
-
-    btnDec.addEventListener("click", () => {
-        if (state.slotCount > 2) {
-            state.slotCount--;
-            display.textContent = state.slotCount;
-            // Nếu giảm slot mà đang chọn thừa, cắt bớt đuôi
-            if (state.selectedForFusion.length > state.slotCount) {
-                state.selectedForFusion.length = state.slotCount;
-                renderInventory();
-            }
-            renderSlots();
-        }
-    });
+function removeAlienFromSlot(index) {
+  if (!state.selectedAliens[index]) return;
+  const removedName = state.selectedAliens[index].name;
+  state.selectedAliens[index] = null;
+  renderSlots();
+  showToast(`Đã gỡ ${removedName} khỏi ADN ${index + 1}.`);
 }
 
-// 2. RANDOM NHANH ALIEN THEO SỐ SLOT (XÚC XẮC)
-function setupRandomizer() {
-    document.getElementById("btn-random").addEventListener("click", () => {
-        // Trộn mảng gốc
-        const shuffled = [...ALIENS_GOC].sort(() => 0.5 - Math.random());
-        // Lấy đúng số lượng slot
-        state.selectedForFusion = shuffled.slice(0, state.slotCount).map(a => a.id);
-        
-        renderInventory();
-        renderSlots();
-    });
+function assignAlienToSlot(index, alienId) {
+  const alien = state.allAliens.find((a) => a.id === alienId);
+  if (!alien) return;
+  state.selectedAliens[index] = alien;
+  renderSlots();
+  closeModal();
+  showToast(`Đã nạp ${alien.name} vào ADN ${index + 1}.`);
 }
 
-// 3. RENDER KHO LƯU TRỮ CHỌN NHANH
-function renderInventory() {
-    const grid = document.getElementById("alien-grid");
-    grid.innerHTML = ALIENS_GOC.map(alien => {
-        const isSelected = state.selectedForFusion.includes(alien.id);
-        return `
-            <div class="alien-item ${isSelected ? 'selected' : ''}" data-id="${alien.id}">
-                <img src="${alien.image}" alt="${alien.name}" onerror="this.style.display='none'">
-                <span>${alien.name}</span>
-            </div>
-        `;
-    }).join("");
+/* ==========================================================================
+   MODAL: KHO ALIEN (dùng chung cho "Nạp mã gen" và "Bộ sưu tập")
+   ========================================================================== */
 
-    grid.querySelectorAll('.alien-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const id = item.dataset.id;
-            if (state.selectedForFusion.includes(id)) {
-                state.selectedForFusion = state.selectedForFusion.filter(a => a !== id);
-            } else {
-                if (state.selectedForFusion.length < state.slotCount) {
-                    state.selectedForFusion.push(id);
-                } else {
-                    // Nếu đầy thì thay thế thằng đầu tiên
-                    state.selectedForFusion.shift();
-                    state.selectedForFusion.push(id);
-                }
-            }
-            renderInventory();
-            renderSlots();
-        });
-    });
+function openInventoryModal(index) {
+  state.activeModalIndex = index;
+  state.isCollectionMode = false;
+  modalTitle.textContent = `NẠP MÃ GEN — ADN ${index + 1}`;
+
+  const selectedIds = new Set(state.selectedAliens.filter(Boolean).map((a) => a.id));
+
+  modalGrid.innerHTML = state.allAliens
+    .map((alien) => {
+      const isTaken = selectedIds.has(alien.id);
+      return `
+        <div class="modal-item ${isTaken ? "modal-item--disabled" : ""}"
+             data-id="${alien.id}"
+             data-selectable="${isTaken ? "false" : "true"}">
+          <img src="${alien.image}" alt="${alien.name}" />
+          <span>${alien.name}</span>
+          <small>${alien.species}</small>
+        </div>
+      `;
+    })
+    .join("");
+
+  modalOverlay.hidden = false;
 }
 
-// 4. RENDER CÁC SLOT GIAO DIỆN MỚI
-function renderSlots() {
-    const container = document.getElementById("fusion-slots");
-    let html = "";
+function openCollectionModal() {
+  state.activeModalIndex = null;
+  state.isCollectionMode = true;
+  modalTitle.textContent = "BỘ SƯU TẬP ALIEN";
 
-    for (let i = 0; i < state.slotCount; i++) {
-        const alienId = state.selectedForFusion[i];
-        
-        if (alienId) {
-            const alien = ALIENS_GOC.find(a => a.id === alienId);
-            html += `
-                <div class="dna-card">
-                    <div class="dna-card__header">
-                        <span>ADN ${i + 1}</span>
-                        <button class="btn-close" onclick="removeSlot('${alienId}')">✕</button>
-                    </div>
-                    <div class="dna-card__box">
-                        <img src="${alien.image}" alt="${alien.name}">
-                        <span class="dna-name">${alien.name}</span>
-                    </div>
-                    <div class="dna-card__footer">
-                        <span>⛶ SIZE</span>
-                        <div class="size-bars">
-                            <div class="bar active"></div><div class="bar active"></div>
-                            <div class="bar active"></div><div class="bar"></div>
-                        </div>
-                        <span style="color: var(--omnitrix-green);">B.THƯỜNG</span>
-                    </div>
-                </div>
-            `;
-        } else {
-            // UI Trống giống khung ngắm trong ảnh
-            html += `
-                <div class="dna-card empty">
-                    <div class="dna-card__header">
-                        <span>ADN ${i + 1}</span>
-                    </div>
-                    <div class="dna-card__box">
-                        <span class="empty-icon">↑</span>
-                        <span class="empty-text">NẠP MÃ GEN</span>
-                    </div>
-                    <div class="dna-card__footer">
-                        <span>⛶ SIZE</span>
-                        <div class="size-bars">
-                            <div class="bar"></div><div class="bar"></div>
-                            <div class="bar"></div><div class="bar"></div>
-                        </div>
-                        <span>---</span>
-                    </div>
-                </div>
-            `;
-        }
+  modalGrid.innerHTML = state.allAliens
+    .map(
+      (alien) => `
+        <div class="modal-item" data-id="${alien.id}" data-selectable="view-only">
+          <img src="${alien.image}" alt="${alien.name}" />
+          <span>${alien.name}</span>
+          <small>${alien.species}</small>
+        </div>
+      `
+    )
+    .join("");
+
+  modalOverlay.hidden = false;
+}
+
+function closeModal() {
+  modalOverlay.hidden = true;
+  state.activeModalIndex = null;
+  state.isCollectionMode = false;
+}
+
+modalGrid.addEventListener("click", (event) => {
+  const item = event.target.closest(".modal-item");
+  if (!item) return;
+
+  const alienId = Number(item.dataset.id);
+  const mode = item.dataset.selectable;
+
+  if (mode === "false") return; // Alien đã được chọn ở ô khác
+
+  if (mode === "view-only") {
+    const alien = state.allAliens.find((a) => a.id === alienId);
+    if (alien) {
+      showToast(
+        `${alien.name} — SỨC MẠNH ${alien.stats.power} | TỐC ĐỘ ${alien.stats.speed} | GIÁP ${alien.stats.durability}`
+      );
     }
-    
-    container.innerHTML = html;
+    return;
+  }
 
-    // Check trạng thái nút
-    const btn = document.getElementById("fuse-btn");
-    if (state.selectedForFusion.length < 2) {
-        btn.disabled = true;
-        document.getElementById("fuse-text").innerText = "CẦN ÍT NHẤT 2 GEN";
-    } else {
-        btn.disabled = false;
-        document.getElementById("fuse-text").innerText = "BẮT ĐẦU DUNG HỢP";
-    }
+  if (state.activeModalIndex !== null) {
+    assignAlienToSlot(state.activeModalIndex, alienId);
+  }
+});
+
+btnModalClose.addEventListener("click", closeModal);
+modalOverlay.addEventListener("click", (event) => {
+  if (event.target === modalOverlay) closeModal();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !modalOverlay.hidden) closeModal();
+});
+
+btnCollection.addEventListener("click", openCollectionModal);
+
+/* ==========================================================================
+   XÚC XẮC — NGẪU NHIÊN HÓA (không trùng lặp)
+   ========================================================================== */
+
+function shuffleArray(array) {
+  const copy = [...array];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
 }
 
-// Hàm global để xóa thẻ từ HTML inline onclick
-window.removeSlot = function(id) {
-    state.selectedForFusion = state.selectedForFusion.filter(a => a !== id);
-    renderInventory();
+btnDice.addEventListener("click", () => {
+  if (state.allAliens.length === 0) return;
+
+  const shuffled = shuffleArray(state.allAliens);
+  const picks = shuffled.slice(0, state.slotCount);
+
+  // Đảm bảo mảng selectedAliens luôn đúng độ dài slotCount, không trùng Alien
+  state.selectedAliens = Array(state.slotCount)
+    .fill(null)
+    .map((_, i) => picks[i] || null);
+
+  renderSlots();
+  showToast("Đã ngẫu nhiên hóa chuỗi gen!");
+});
+
+/* ==========================================================================
+   TABS (ULTIMATE / BIOMNITRIX / CHAQUETRIX)
+   ========================================================================== */
+
+tabs.forEach((tabBtn) => {
+  tabBtn.addEventListener("click", () => {
+    tabs.forEach((t) => {
+      t.classList.remove("tab-active");
+      t.removeAttribute("aria-selected");
+    });
+    tabBtn.classList.add("tab-active");
+    tabBtn.setAttribute("aria-selected", "true");
+  });
+});
+
+/* ==========================================================================
+   DUNG HỢP (FUSION) — nút "ĐANG XỬ LÝ..."
+   ========================================================================== */
+
+btnProcess.addEventListener("click", () => {
+  const validAliens = state.selectedAliens.filter(Boolean);
+
+  if (validAliens.length < 2) {
+    showToast("Cần tối thiểu 2 mã gen hợp lệ để tiến hành dung hợp!", true);
+    return;
+  }
+
+  const fused = fuseAliens(validAliens);
+  if (!fused) {
+    showToast("Dung hợp thất bại. Vui lòng thử lại.", true);
+    return;
+  }
+
+  renderFusionResult(fused);
+  showToast(`Dung hợp thành công: ${fused.name}!`);
+});
+
+function renderFusionResult(fused) {
+  const statLabels = {
+    power: "SỨC MẠNH",
+    speed: "TỐC ĐỘ",
+    durability: "GIÁP",
+    intelligence: "TRÍ TUỆ",
+    energy: "NĂNG LƯỢNG",
+  };
+
+  const chips = Object.entries(fused.stats)
+    .map(
+      ([key, value]) =>
+        `<span class="fusion-stat-chip">${statLabels[key] || key}: <strong>${value}</strong></span>`
+    )
+    .join("");
+
+  fusionResult.innerHTML = `
+    <h3>${fused.name}</h3>
+    <p>Chủng loài: ${fused.species} · Chỉ số sức mạnh tổng: ${fused.powerLevel}</p>
+    <p>Thành phần: ${fused.componentAliens.join(" + ")}</p>
+    <div class="fusion-stats">${chips}</div>
+  `;
+  fusionResult.hidden = false;
+
+  // Tự động ẩn kết quả sau 7 giây để nhường chỗ cho radar
+  clearTimeout(renderFusionResult._timer);
+  renderFusionResult._timer = setTimeout(() => {
+    fusionResult.hidden = true;
+  }, 7000);
+}
+
+/* ==========================================================================
+   ĐẤU TRƯỜNG — tải battle.json thật qua fetch()
+   ========================================================================== */
+
+btnArena.addEventListener("click", async () => {
+  try {
+    showToast("Đang kết nối tới đấu trường...");
+    const data = await fetchBattleData();
+    showToast(
+      `${data.arena.name} — Hạng ${data.arena.difficulty} — Trạng thái: ${data.arena.status}`
+    );
+  } catch (err) {
+    showToast(`Không thể tải dữ liệu đấu trường: ${err.message}`, true);
+  }
+});
+
+/* ==========================================================================
+   KHỞI TẠO ỨNG DỤNG
+   ========================================================================== */
+
+async function init() {
+  // Hiển thị trạng thái tải ban đầu (skeleton đơn giản bằng cách disable nút)
+  btnProcess.disabled = true;
+  btnDice.disabled = true;
+
+  try {
+    const aliens = await fetchAliens();
+    state.allAliens = aliens;
+    state.selectedAliens = Array(state.slotCount).fill(null);
     renderSlots();
+    showToast("Đã tải xong dữ liệu chuỗi gen.");
+  } catch (err) {
+    showToast(`Lỗi tải dữ liệu Alien: ${err.message}`, true);
+  } finally {
+    btnProcess.disabled = false;
+    btnDice.disabled = false;
+  }
 }
 
-// 5. XỬ LÝ DUNG HỢP VÀ VẼ RADAR
-function handleFuse() {
-    const parents = state.selectedForFusion.map(id => ALIENS_GOC.find(a => a.id === id));
-    
-    document.getElementById("fuse-spinner").style.display = "inline-block";
-    document.getElementById("fuse-btn").disabled = true;
-
-    setTimeout(() => {
-        // Dùng code dung hợp của bạn
-        const result = performFusion(parents);
-        
-        document.getElementById("empty-state").classList.add("hidden");
-        document.getElementById("result-content").classList.remove("hidden");
-
-        // Điền text
-        document.getElementById("res-id").textContent = result.name.substring(0,6).toUpperCase() + "-" + state.selectedForFusion.length;
-        document.getElementById("res-name").textContent = result.name;
-        document.getElementById("res-danger").textContent = result.dangerLevel;
-        document.getElementById("res-type").textContent = result.types;
-        
-        // Hiện ảnh Alien đầu tiên làm nền
-        document.getElementById("res-image").src = result.parents[0].image;
-
-        // Vẽ biểu đồ
-        drawRadar(result);
-
-        document.getElementById("fuse-spinner").style.display = "none";
-        document.getElementById("fuse-btn").disabled = false;
-    }, 800);
-}
-
-function drawRadar(result) {
-    const ctx = document.getElementById("radar-chart").getContext("2d");
-    if (resultRadarChart) resultRadarChart.destroy();
-    
-    resultRadarChart = new Chart(ctx, {
-        type: "radar",
-        data: {
-            labels: STAT_KEYS.map(k => STAT_LABELS[k]),
-            datasets: [{
-                label: "Chỉ số",
-                data: STAT_KEYS.map(k => result.stats[k]),
-                backgroundColor: "rgba(29, 242, 165, 0.2)",
-                borderColor: "#1df2a5",
-                pointBackgroundColor: "#1df2a5",
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            scales: {
-                r: {
-                    angleLines: { color: "rgba(255,255,255,0.1)" },
-                    grid: { color: "rgba(255,255,255,0.1)" },
-                    pointLabels: { color: "#8b949e", font: { size: 10 } },
-                    ticks: { display: false },
-                    min: 0, max: 100
-                }
-            },
-            plugins: { legend: { display: false } }
-        }
-    });
-}
+init();
