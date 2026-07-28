@@ -557,23 +557,25 @@ button {
   }
 }
 
-/* ---- Lõi trung tâm: glow + icon + dòng trạng thái ----
-   .radar-core phủ kín .radar-wrap (inset: 0) nên tâm của nó trùng tuyệt đối
-   với tâm 4 vòng radar. Glow và icon dùng chung kỹ thuật căn giữa
-   (top/left 50% + translate(-50%,-50%)) nên luôn đồng tâm với nhau và với
-   .radar-core — không còn dùng flex-column như trước (vốn khiến icon bị đẩy
-   lệch lên trên do halo + dòng trạng thái nằm cùng cột bên dưới nó). */
+/* ==========================================================================
+   KHỐI TRUNG TÂM — .radar-core
+   Gồm 3 lớp đồng tâm tuyệt đối, xếp theo z-index tăng dần:
+   1) .radar-core-glow  — hào quang neon, chạy animation "thở" (pulse) liên tục
+   2) .radar-core-base  — khối tròn nền đen, khớp tuyệt đối với var(--bg)
+   3) .radar-core-icon  — icon, đứng yên hoàn toàn, không animation
+   ========================================================================== */
+
 .radar-core {
   position: absolute;
   inset: 0;
   z-index: 2;
 }
 
-/* Quầng glow trung tâm — đường kính = 46% cạnh .radar-wrap, bằng đúng đường
-   kính vòng nét đứt thứ 2 tính từ trong ra ngoài (radar-ring--r4 là vòng
-   trong cùng = thứ 1, radar-ring--r3 = thứ 2, dùng inset: 27%
-   => 100% - 27%×2 = 46%). Gộp chung 2 lớp glow cũ (quầng 230px sau icon +
-   halo 20px) thành một lớp glow duy nhất, đúng kích thước yêu cầu. */
+/* Lớp 1: Hào quang neon — kích thước 46% cạnh .radar-wrap (bằng đúng đường
+   kính vòng nét đứt thứ 2 tính từ trong ra: radar-ring--r4 = vòng 1,
+   radar-ring--r3 = vòng 2 với inset 27% => 100% - 27%*2 = 46%).
+   Animation corePulse thay đổi đồng thời opacity + scale + box-shadow theo
+   chu kỳ ease-in-out lặp vô hạn, tạo cảm giác lõi năng lượng đang "thở". */
 .radar-core-glow {
   position: absolute;
   top: 50%;
@@ -584,17 +586,51 @@ button {
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(29, 242, 165, 0.36) 0%,
-    rgba(29, 242, 165, 0.2) 38%,
-    rgba(29, 242, 165, 0.08) 65%,
+    rgba(29, 242, 165, 0.4) 0%,
+    rgba(29, 242, 165, 0.22) 40%,
+    rgba(29, 242, 165, 0.08) 68%,
     rgba(29, 242, 165, 0) 100%
   );
   z-index: 1;
   pointer-events: none;
+  animation: corePulse 2.8s ease-in-out infinite;
+  will-change: opacity, transform, box-shadow;
 }
 
-/* Icon: căn giữa bằng đúng kỹ thuật của glow nên tâm icon luôn trùng khớp
-   tuyệt đối với tâm glow và tâm toàn bộ hệ vòng radar */
+@keyframes corePulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.92);
+    box-shadow: 0 0 26px 4px var(--neon-dim);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.06);
+    box-shadow: 0 0 58px 16px var(--neon-glow);
+  }
+}
+
+/* Lớp 2: Khối tròn nền đen — đường kính 34% (nhỏ hơn glow 46%) để phần
+   glow "tràn" ra viền xung quanh nhìn thấy được, giống hiệu ứng quầng sáng
+   bao quanh lõi đen. Dùng đúng var(--bg) nên màu luôn khớp tuyệt đối với
+   nền tổng thể của trang, không lệch tông, không lộ viền sắc cứng. */
+.radar-core-base {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34%;
+  height: 34%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--bg);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Lớp 3: Icon — căn giữa bằng đúng kỹ thuật top/left 50% + translate(-50%,-50%)
+   như 2 lớp trên nên luôn đồng tâm tuyệt đối với glow, với khối đen, và với
+   toàn bộ hệ vòng radar. Icon đứng yên hoàn toàn: không animation riêng. */
 .radar-core-icon {
   position: absolute;
   top: 50%;
@@ -604,13 +640,11 @@ button {
   align-items: center;
   justify-content: center;
   color: var(--neon);
-  z-index: 2;
-  /* Icon đứng yên hoàn toàn: không animation, không filter/drop-shadow trên icon */
+  z-index: 3;
 }
 
 /* Dòng trạng thái: neo theo mép dưới của glow (50% + bán kính glow 23%)
-   rồi cộng thêm khoảng cách cố định 22px — luôn cân đối, nằm ngay dưới
-   glow/icon mà không kéo lệch tâm của chúng như cách gap flex trước đây */
+   rồi cộng thêm khoảng cách cố định 22px */
 .radar-core-status {
   position: absolute;
   top: calc(50% + 23% + 22px);
