@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lõi Omnitrix - Hệ Thống Nâng Cấp Cao Cấp</title>
   <link rel="stylesheet" href="./style.css" />
+  <style>
+    /* CSS bổ sung để đảm bảo icon ở trung tâm radar luôn được phóng to 
+       cho cả Biomnitrix, Ultimatrix và Chaquetrix khi JavaScript render lại */
+    #radarCoreIcon svg {
+      width: 150px !important;
+      height: 150px !important;
+      transition: all 0.3s ease;
+    }
+  </style>
 </head>
 <body class="theme-biomnitrix">
   <!-- GLOBAL BACKGROUND -->
@@ -148,7 +157,8 @@
           <svg id="btnProcessIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
             <polyline points="2 17 12 22 22 17"></polyline>
-            <polyline points="2 12 17 22 12"></polyline>
+            <!-- Đã sửa lỗi thiếu tọa độ 12 ở đây -->
+            <polyline points="2 12 12 17 22 12"></polyline>
           </svg>
           <span id="btnProcessText">DUNG HỢP ADN</span>
         </button>
@@ -165,10 +175,12 @@
             <div class="radar-core-glow"></div>
             <div class="radar-core-base"></div>
             <div class="radar-core-icon" id="radarCoreIcon">
-              <svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="currentColor" stroke-width="1.4">
+              <!-- Đã chỉnh lại kích thước width="150" height="150" tại thẻ SVG này -->
+              <svg viewBox="0 0 24 24" width="150" height="150" fill="none" stroke="currentColor" stroke-width="1.4">
                 <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                 <polyline points="2 17 12 22 22 17"></polyline>
-                <polyline points="2 12 17 22 12"></polyline>
+                <!-- Đã sửa lỗi thiếu tọa độ 12 ở đây -->
+                <polyline points="2 12 12 17 22 12"></polyline>
               </svg>
             </div>
             <div class="radar-core-status" id="radarCoreStatus">ĐANG HOẠT ĐỘNG</div>
