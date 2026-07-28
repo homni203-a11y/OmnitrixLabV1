@@ -568,11 +568,36 @@ button {
 }
 
 .radar-core-icon {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--neon);
-  /* Icon đứng yên hoàn toàn: không animation, không filter/glow */
+  z-index: 1;
+  /* Icon đứng yên hoàn toàn: không animation, không filter/drop-shadow trên icon */
+}
+
+/* Quầng sáng tỏa tròn (ambient radial glow) phía sau icon — không gắn vào icon
+   bằng filter, mà là một lớp nền riêng để tạo hiệu ứng hào quang mờ ảo hắt
+   ra xung quanh, tách biệt với hình khối sắc nét của icon phía trên nó */
+.radar-core-icon::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 230px;
+  height: 230px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(29, 242, 165, 0.32) 0%,
+    rgba(29, 242, 165, 0.16) 35%,
+    rgba(29, 242, 165, 0.05) 60%,
+    rgba(29, 242, 165, 0) 75%
+  );
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* ---- Hệ thống 2 vòng tròn chồng lớp (halo) — nằm giữa icon và dòng trạng thái ---- */
