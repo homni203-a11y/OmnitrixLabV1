@@ -74,10 +74,23 @@
       <div class="dot-grid" aria-hidden="true"></div>
 
       <div class="radar-wrap">
-        <div class="radar-ring" aria-hidden="true"></div>
-        <div class="radar-ring radar-ring--outer" aria-hidden="true"></div>
+        <!-- Hệ thống nhiều vòng tròn nét đứt đồng tâm, kích thước/độ mờ khác nhau
+             để tạo chiều sâu không gian: một số xoay, một số đứng yên -->
+        <div class="radar-ring radar-ring--r1" aria-hidden="true"></div>
+        <div class="radar-ring radar-ring--r2" aria-hidden="true"></div>
+        <div class="radar-ring radar-ring--r3" aria-hidden="true"></div>
+        <div class="radar-ring radar-ring--r4" aria-hidden="true"></div>
+
         <div class="dna-core" id="dnaCore" aria-live="polite">
-          <span class="dna-core-emoji">🧬</span>
+          <span class="dna-core-icon" aria-hidden="true">
+            <!-- Icon "Layers / Stack" dạng SVG, tô màu neon qua currentColor -->
+            <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </span>
+          <span class="dna-core-status">CHỜ KHỞI ĐỘNG</span>
         </div>
       </div>
 
