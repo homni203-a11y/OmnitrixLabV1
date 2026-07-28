@@ -572,9 +572,34 @@ button {
   align-items: center;
   justify-content: center;
   color: var(--neon);
-  animation: float 3.2s ease-in-out infinite;
-  /* Hiệu ứng phát sáng mập mờ (hazy glow) quanh icon trung tâm */
-  filter: drop-shadow(0 0 15px rgba(29, 242, 165, 0.6));
+  /* Icon đứng yên hoàn toàn: không animation, không filter/glow */
+}
+
+/* ---- Hệ thống 2 vòng tròn chồng lớp (halo) — nằm giữa icon và dòng trạng thái ---- */
+.radar-core-halo {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+/* Vòng dưới (lớp ngoài cùng): trắng, có glow mờ lan tỏa ra ngoài */
+.radar-core-halo-outer {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 14px 4px rgba(255, 255, 255, 0.55), 0 0 30px 10px rgba(255, 255, 255, 0.25);
+  z-index: 1;
+}
+
+/* Vòng trên (lớp che khuất): cùng kích thước, màu trùng background —
+   phủ kín phần đĩa trắng bên dưới, chỉ để lộ lại viền glow lan tỏa ra ngoài rìa */
+.radar-core-halo-mask {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--bg);
+  z-index: 2;
 }
 
 .radar-core-status {
@@ -585,16 +610,6 @@ button {
   color: var(--text-secondary);
   text-align: center;
   animation: statusPulse 2.6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-18px);
-  }
 }
 
 @keyframes statusPulse {
