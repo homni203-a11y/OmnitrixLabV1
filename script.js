@@ -1,6 +1,6 @@
 /**
  * script.js - Core Omnitrix System
- * Cập nhật: Dùng ảnh local (assets/images/) và đồng bộ Icon Biomnitrix (Layers)
+ * Cập nhật: Dùng ảnh local (assets/images/) và đồng bộ Icon chuẩn SVG nét vẽ (24x24)
  */
 
 /* ==========================================================================
@@ -18,7 +18,7 @@ const ALIENS_DATA = [
     id: 2, 
     name: "Four Arms", 
     species: "Tetramand", 
-    image: "assets/images/fourarms.png", // Lưu ý: Nếu bạn lưu là "four arms.png" có dấu cách thì sửa lại dòng này nhé
+    image: "assets/images/fourarms.png", 
     stats: { power: 10, speed: 5, durability: 9, intelligence: 4, energy: 5 } 
   },
   { 
@@ -52,9 +52,9 @@ const ALIENS_DATA = [
 ];
 
 /* ==========================================================================
-   2. SVG ICONS (ĐỒNG BỘ THEO ICON TAB BIOMNITRIX CỦA BẠN)
+   2. SVG ICONS CHUẨN ĐỒNG BỘ 24x24 (STROKE STYLE)
    ========================================================================== */
-// Icon Biomnitrix (Hình layers / 3 lớp xếp chồng giống hệt trên Tab)
+// Icon Biomnitrix (Layers - 3 Lớp xếp chồng)
 const OMNITRIX_ICON_SVG = `
   <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
@@ -63,24 +63,17 @@ const OMNITRIX_ICON_SVG = `
   </svg>
 `;
 
-// Icon Ultimatrix (Hình tia chớp/năng lượng)
+// Icon Ultimatrix (Tia chớp năng lượng tiến hóa)
 const ULTIMATRIX_ICON_SVG = `
-  <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6" stroke-dasharray="8 4"/>
-    <polygon points="12,12 88,12 50,48" fill="currentColor" />
-    <polygon points="12,88 88,88 50,52" fill="currentColor" />
-    <path d="M50 10 L58 32 L50 26 L42 32 Z" fill="currentColor"/>
-    <path d="M50 90 L58 68 L50 74 L42 68 Z" fill="currentColor"/>
+  <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
   </svg>
 `;
 
-// Icon Chaquetrix (Hình trái tim công nghệ)
+// Icon Chaquetrix (Trái tim công nghệ)
 const CHAQUETRIX_ICON_SVG = `
-  <svg viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="7"/>
-    <polygon points="22,22 78,22 50,50" fill="currentColor" />
-    <polygon points="22,78 78,78 50,50" fill="currentColor" />
-    <path d="M50 43 C47 38, 40 40, 40 46 C40 52, 50 58, 50 58 C50 58, 60 52, 60 46 C60 40, 53 38, 50 43 Z" fill="#ff539b" stroke="#ffffff" stroke-width="1.5"/>
+  <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.72-8.72 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
   </svg>
 `;
 
@@ -230,9 +223,11 @@ function updateHeaderAndTheme(tabKey) {
   if (!config) return;
 
   // 1. Cập nhật Logo Góc Trái
-  brandIconWrap.innerHTML = config.icon;
-  brandTitle.textContent = config.title;
-  brandSubtitle.textContent = config.subtitle;
+  if (brandIconWrap) {
+    brandIconWrap.innerHTML = config.icon;
+  }
+  if (brandTitle) brandTitle.textContent = config.title;
+  if (brandSubtitle) brandSubtitle.textContent = config.subtitle;
 
   // 2. Cập nhật Icon ở Trung Tâm Cột Phải (Radar Core)
   const radarIcon = document.getElementById('radarCoreIcon');
@@ -249,8 +244,13 @@ function updateHeaderAndTheme(tabKey) {
   });
 
   // 5. Cập nhật Nút Thực Thi Action
-  btnProcessText.textContent = config.processText;
-  btnProcess.querySelector('svg').outerHTML = config.processIcon;
+  if (btnProcessText) btnProcessText.textContent = config.processText;
+  if (btnProcess) {
+    const iconEl = btnProcess.querySelector('svg');
+    if (iconEl) {
+      iconEl.outerHTML = config.processIcon;
+    }
+  }
 }
 
 function switchTab(tabKey) {
@@ -260,9 +260,9 @@ function switchTab(tabKey) {
   if (tabKey === 'ultimatrix' || tabKey === 'chaquetrix') {
     state.slotCount = 1;
     state.selectedAliens = [state.selectedAliens[0] || null];
-    slotStepper.style.display = 'none';
+    if (slotStepper) slotStepper.style.display = 'none';
   } else {
-    slotStepper.style.display = 'flex';
+    if (slotStepper) slotStepper.style.display = 'flex';
     if (state.selectedAliens.length < 2) {
       state.slotCount = 2;
       state.selectedAliens = [state.selectedAliens[0] || null, null];
@@ -274,6 +274,7 @@ function switchTab(tabKey) {
 }
 
 function renderDNAGrid() {
+  if (!dnaGrid) return;
   dnaGrid.innerHTML = '';
   for (let i = 0; i < state.slotCount; i++) {
     const alien = state.selectedAliens[i];
@@ -303,12 +304,13 @@ function renderDNAGrid() {
     dnaGrid.appendChild(slotEl);
   }
 
-  slotCountDisplay.textContent = state.slotCount;
-  btnSlotMinus.disabled = state.slotCount <= 2;
-  btnSlotPlus.disabled = state.slotCount >= 5;
+  if (slotCountDisplay) slotCountDisplay.textContent = state.slotCount;
+  if (btnSlotMinus) btnSlotMinus.disabled = state.slotCount <= 2;
+  if (btnSlotPlus) btnSlotPlus.disabled = state.slotCount >= 5;
 }
 
 function renderSubPanels() {
+  if (!subpanelContainer) return;
   subpanelContainer.innerHTML = '';
 
   if (state.activeTab === 'ultimatrix') {
@@ -352,7 +354,8 @@ function renderSubPanels() {
     if (slider) {
       slider.addEventListener('input', (e) => {
         state.bodyProportions = e.target.value;
-        document.getElementById('proportionVal').textContent = `${state.bodyProportions}%`;
+        const pVal = document.getElementById('proportionVal');
+        if (pVal) pVal.textContent = `${state.bodyProportions}%`;
       });
     }
   }
@@ -361,170 +364,188 @@ function renderSubPanels() {
 /* ==========================================================================
    7. EVENT LISTENERS
    ========================================================================== */
-btnCycleCore.addEventListener('click', () => {
-  const sequence = ['biomnitrix', 'ultimatrix', 'chaquetrix'];
-  const currentIndex = sequence.indexOf(state.activeTab);
-  const nextTab = sequence[(currentIndex + 1) % sequence.length];
-  switchTab(nextTab);
-  showToast(`Đã chuyển sang Lõi ${HEADER_CONFIG[nextTab].title}`);
-});
+if (btnCycleCore) {
+  btnCycleCore.addEventListener('click', () => {
+    const sequence = ['biomnitrix', 'ultimatrix', 'chaquetrix'];
+    const currentIndex = sequence.indexOf(state.activeTab);
+    const nextTab = sequence[(currentIndex + 1) % sequence.length];
+    switchTab(nextTab);
+    showToast(`Đã chuyển sang Lõi ${HEADER_CONFIG[nextTab].title}`);
+  });
+}
 
 tabs.forEach(tab => {
   tab.addEventListener('click', () => switchTab(tab.dataset.tab));
 });
 
-btnSlotPlus.addEventListener('click', () => {
-  if (state.slotCount < 5) {
-    state.slotCount++;
-    state.selectedAliens.push(null);
+if (btnSlotPlus) {
+  btnSlotPlus.addEventListener('click', () => {
+    if (state.slotCount < 5) {
+      state.slotCount++;
+      state.selectedAliens.push(null);
+      renderDNAGrid();
+    }
+  });
+}
+
+if (btnSlotMinus) {
+  btnSlotMinus.addEventListener('click', () => {
+    if (state.slotCount > 2) {
+      state.slotCount--;
+      state.selectedAliens.pop();
+      renderDNAGrid();
+    }
+  });
+}
+
+if (btnDice) {
+  btnDice.addEventListener('click', () => {
+    playDiceRollSound();
+    btnDice.classList.remove('btn-dice-shake');
+    void btnDice.offsetWidth;
+    btnDice.classList.add('btn-dice-shake');
+
+    const shuffled = [...ALIENS_DATA].sort(() => 0.5 - Math.random());
+    for (let i = 0; i < state.slotCount; i++) {
+      state.selectedAliens[i] = shuffled[i] || null;
+    }
     renderDNAGrid();
-  }
-});
+    showToast("Đã ngẫu nhiên hóa chuỗi gen ADN!");
+  });
+}
 
-btnSlotMinus.addEventListener('click', () => {
-  if (state.slotCount > 2) {
-    state.slotCount--;
-    state.selectedAliens.pop();
-    renderDNAGrid();
-  }
-});
+if (dnaGrid) {
+  dnaGrid.addEventListener('click', (e) => {
+    const removeBtn = e.target.closest('.slot-remove-btn');
+    if (removeBtn) {
+      e.stopPropagation();
+      const idx = Number(removeBtn.dataset.index);
+      state.selectedAliens[idx] = null;
+      renderDNAGrid();
+      return;
+    }
 
-btnDice.addEventListener('click', () => {
-  playDiceRollSound();
-  btnDice.classList.remove('btn-dice-shake');
-  void btnDice.offsetWidth;
-  btnDice.classList.add('btn-dice-shake');
-
-  const shuffled = [...ALIENS_DATA].sort(() => 0.5 - Math.random());
-  for (let i = 0; i < state.slotCount; i++) {
-    state.selectedAliens[i] = shuffled[i] || null;
-  }
-  renderDNAGrid();
-  showToast("Đã ngẫu nhiên hóa chuỗi gen ADN!");
-});
-
-dnaGrid.addEventListener('click', (e) => {
-  const removeBtn = e.target.closest('.slot-remove-btn');
-  if (removeBtn) {
-    e.stopPropagation();
-    const idx = Number(removeBtn.dataset.index);
-    state.selectedAliens[idx] = null;
-    renderDNAGrid();
-    return;
-  }
-
-  const slot = e.target.closest('.dna-slot');
-  if (slot) {
-    openModal(Number(slot.dataset.index));
-  }
-});
+    const slot = e.target.closest('.dna-slot');
+    if (slot) {
+      openModal(Number(slot.dataset.index));
+    }
+  });
+}
 
 function openModal(slotIndex = null) {
   state.activeModalSlotIndex = slotIndex;
-  modalTitle.textContent = slotIndex !== null ? `NẠP MÃ GEN — ADN ${slotIndex + 1}` : "BỘ SƯU TẬP ALIEN";
+  if (modalTitle) {
+    modalTitle.textContent = slotIndex !== null ? `NẠP MÃ GEN — ADN ${slotIndex + 1}` : "BỘ SƯU TẬP ALIEN";
+  }
 
   const takenIds = new Set(state.selectedAliens.filter(Boolean).map(a => a.id));
 
-  modalGrid.innerHTML = ALIENS_DATA.map(alien => {
-    const isTaken = slotIndex !== null && takenIds.has(alien.id);
-    return `
-      <div class="modal-item ${isTaken ? 'modal-item--disabled' : ''}" data-id="${alien.id}">
-        <img src="${alien.image}" alt="${alien.name}" onerror="this.src='https://via.placeholder.com/150/161a22/1df2a5?text=NO+IMAGE'" />
-        <span>${alien.name}</span>
-        <small>${alien.species}</small>
-      </div>
-    `;
-  }).join('');
+  if (modalGrid) {
+    modalGrid.innerHTML = ALIENS_DATA.map(alien => {
+      const isTaken = slotIndex !== null && takenIds.has(alien.id);
+      return `
+        <div class="modal-item ${isTaken ? 'modal-item--disabled' : ''}" data-id="${alien.id}">
+          <img src="${alien.image}" alt="${alien.name}" onerror="this.src='https://via.placeholder.com/150/161a22/1df2a5?text=NO+IMAGE'" />
+          <span>${alien.name}</span>
+          <small>${alien.species}</small>
+        </div>
+      `;
+    }).join('');
+  }
 
-  modalOverlay.hidden = false;
+  if (modalOverlay) modalOverlay.hidden = false;
 }
 
-modalGrid.addEventListener('click', (e) => {
-  const item = e.target.closest('.modal-item');
-  if (!item || item.classList.contains('modal-item--disabled')) return;
+if (modalGrid) {
+  modalGrid.addEventListener('click', (e) => {
+    const item = e.target.closest('.modal-item');
+    if (!item || item.classList.contains('modal-item--disabled')) return;
 
-  const id = Number(item.dataset.id);
-  const alien = ALIENS_DATA.find(a => a.id === id);
+    const id = Number(item.dataset.id);
+    const alien = ALIENS_DATA.find(a => a.id === id);
 
-  if (state.activeModalSlotIndex !== null) {
-    state.selectedAliens[state.activeModalSlotIndex] = alien;
-    renderDNAGrid();
-    modalOverlay.hidden = true;
-    showToast(`Đã nạp gen ${alien.name}!`);
-  } else {
-    showToast(`${alien.name} — Sức mạnh: ${alien.stats.power} | Tốc độ: ${alien.stats.speed}`);
-  }
-});
-
-btnModalClose.addEventListener('click', () => modalOverlay.hidden = true);
-btnCollection.addEventListener('click', () => openModal(null));
-
-btnProcess.addEventListener('click', () => {
-  const selected = state.selectedAliens.filter(Boolean);
-
-  if (state.activeTab === 'biomnitrix') {
-    if (selected.length < 2) {
-      showToast("Cần tối thiểu 2 mã gen để dung hợp Biomnitrix!", true);
-      return;
+    if (state.activeModalSlotIndex !== null) {
+      state.selectedAliens[state.activeModalSlotIndex] = alien;
+      renderDNAGrid();
+      if (modalOverlay) modalOverlay.hidden = true;
+      showToast(`Đã nạp gen ${alien.name}!`);
+    } else {
+      showToast(`${alien.name} — Sức mạnh: ${alien.stats.power} | Tốc độ: ${alien.stats.speed}`);
     }
-    const fusedName = selected.map(a => a.name.slice(0, Math.ceil(a.name.length / 2))).join('');
-    fusionResult.innerHTML = `
-      <h3>DUNG HỢP THÀNH CÔNG: ${fusedName}</h3>
-      <p>Chủng loài dung hợp đa hợp giữa ${selected.map(a => a.name).join(' + ')}.</p>
-      <div class="fusion-stats">
-        <span class="fusion-stat-chip">SỨC MẠNH: 9.5</span>
-        <span class="fusion-stat-chip">TỐC ĐỘ: 8.8</span>
-        <span class="fusion-stat-chip">KHÁNG CỰ: 9.0</span>
-      </div>
-    `;
-  } else if (state.activeTab === 'ultimatrix') {
-    if (selected.length < 1) {
-      showToast("Vui lòng chọn 1 Alien để kích hoạt Tiến Hóa!", true);
-      return;
-    }
-    fusionResult.innerHTML = `
-      <h3>ULTIMATE ${selected[0].name.toUpperCase()}</h3>
-      <p>Đã hoàn tất mô phỏng môi trường chiến tranh 1 triệu năm.</p>
-      <div class="fusion-stats">
-        <span class="fusion-stat-chip">TIẾN HÓA CẤP: MAX</span>
-        <span class="fusion-stat-chip">SỨC MẠNH x3.5</span>
-      </div>
-    `;
-  } else {
-    if (selected.length < 1) {
-      showToast("Vui lòng chọn 1 Alien để triệu hồi!", true);
-      return;
-    }
-    fusionResult.innerHTML = `
-      <h3>TRIỆU HỒI HAREM: ${selected[0].name}</h3>
-      <p>Tỉ lệ cơ thể đã điều chỉnh: ${state.bodyProportions}%. Trạng thái thân thiện: 100%.</p>
-    `;
-  }
+  });
+}
 
-  fusionResult.hidden = false;
-  if (window.innerWidth <= 768) {
-    switchMobileView('result');
-  }
-  showToast("Thao tác hoàn tất thành công!");
-});
+if (btnModalClose) btnModalClose.addEventListener('click', () => { if (modalOverlay) modalOverlay.hidden = true; });
+if (btnCollection) btnCollection.addEventListener('click', () => openModal(null));
+
+if (btnProcess) {
+  btnProcess.addEventListener('click', () => {
+    const selected = state.selectedAliens.filter(Boolean);
+
+    if (state.activeTab === 'biomnitrix') {
+      if (selected.length < 2) {
+        showToast("Cần tối thiểu 2 mã gen để dung hợp Biomnitrix!", true);
+        return;
+      }
+      const fusedName = selected.map(a => a.name.slice(0, Math.ceil(a.name.length / 2))).join('');
+      fusionResult.innerHTML = `
+        <h3>DUNG HỢP THÀNH CÔNG: ${fusedName}</h3>
+        <p>Chủng loài dung hợp đa hợp giữa ${selected.map(a => a.name).join(' + ')}.</p>
+        <div class="fusion-stats">
+          <span class="fusion-stat-chip">SỨC MẠNH: 9.5</span>
+          <span class="fusion-stat-chip">TỐC ĐỘ: 8.8</span>
+          <span class="fusion-stat-chip">KHÁNG CỰ: 9.0</span>
+        </div>
+      `;
+    } else if (state.activeTab === 'ultimatrix') {
+      if (selected.length < 1) {
+        showToast("Vui lòng chọn 1 Alien để kích hoạt Tiến Hóa!", true);
+        return;
+      }
+      fusionResult.innerHTML = `
+        <h3>ULTIMATE ${selected[0].name.toUpperCase()}</h3>
+        <p>Đã hoàn tất mô phỏng môi trường chiến tranh 1 triệu năm.</p>
+        <div class="fusion-stats">
+          <span class="fusion-stat-chip">TIẾN HÓA CẤP: MAX</span>
+          <span class="fusion-stat-chip">SỨC MẠNH x3.5</span>
+        </div>
+      `;
+    } else {
+      if (selected.length < 1) {
+        showToast("Vui lòng chọn 1 Alien để triệu hồi!", true);
+        return;
+      }
+      fusionResult.innerHTML = `
+        <h3>TRIỆU HỒI HAREM: ${selected[0].name}</h3>
+        <p>Tỉ lệ cơ thể đã điều chỉnh: ${state.bodyProportions}%. Trạng thái thân thiện: 100%.</p>
+      `;
+    }
+
+    if (fusionResult) fusionResult.hidden = false;
+    if (window.innerWidth <= 768) {
+      switchMobileView('result');
+    }
+    showToast("Thao tác hoàn tất thành công!");
+  });
+}
 
 function switchMobileView(view) {
   state.mobileActiveView = view;
   if (view === 'control') {
-    leftSidebar.classList.add('mobile-visible');
-    rightPanel.classList.remove('mobile-visible');
-    navBtnControl.classList.add('active');
-    navBtnResult.classList.remove('active');
+    if (leftSidebar) leftSidebar.classList.add('mobile-visible');
+    if (rightPanel) rightPanel.classList.remove('mobile-visible');
+    if (navBtnControl) navBtnControl.classList.add('active');
+    if (navBtnResult) navBtnResult.classList.remove('active');
   } else {
-    leftSidebar.classList.remove('mobile-visible');
-    rightPanel.classList.add('mobile-visible');
-    navBtnControl.classList.remove('active');
-    navBtnResult.classList.add('active');
+    if (leftSidebar) leftSidebar.classList.remove('mobile-visible');
+    if (rightPanel) rightPanel.classList.add('mobile-visible');
+    if (navBtnControl) navBtnControl.classList.remove('active');
+    if (navBtnResult) navBtnResult.classList.add('active');
   }
 }
 
-navBtnControl.addEventListener('click', () => switchMobileView('control'));
-navBtnResult.addEventListener('click', () => switchMobileView('result'));
+if (navBtnControl) navBtnControl.addEventListener('click', () => switchMobileView('control'));
+if (navBtnResult) navBtnResult.addEventListener('click', () => switchMobileView('result'));
 
 document.addEventListener('click', (e) => {
   if (e.target.closest('button') || e.target.closest('.tab') || e.target.closest('.dna-slot')) {
@@ -532,7 +553,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-btnArena.addEventListener('click', () => showToast("Đang kết nối Đấu Trường Vilgax..."));
+if (btnArena) btnArena.addEventListener('click', () => showToast("Đang kết nối Đấu Trường Vilgax..."));
 
 /* ==========================================================================
    8. INITIALIZATION
