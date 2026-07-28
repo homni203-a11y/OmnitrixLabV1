@@ -1,0 +1,208 @@
+/* Thiết lập cơ bản */
+:root {
+    --ben10-green: #00ff44;
+    --dark-bg: #0a0e0a;
+    --panel-bg: #111a11;
+    --border-color: #1a331a;
+    --text-main: #e0ffe0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-main);
+    padding: 20px;
+}
+
+/* Header & Nhãn hiệu */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--ben10-green);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.logo h1 {
+    color: var(--ben10-green);
+    text-shadow: 0 0 10px rgba(0, 255, 68, 0.5);
+}
+
+.to3-badge {
+    background-color: darkgreen;
+    color: white;
+    padding: 8px 24px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    letter-spacing: 2px;
+}
+
+/* Bố cục 3 cột chính */
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.panel {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: inset 0 0 20px rgba(0, 255, 68, 0.05);
+}
+
+.panel h2 {
+    text-align: center;
+    color: var(--ben10-green);
+    margin-bottom: 20px;
+    border-bottom: 1px dashed var(--ben10-green);
+    padding-bottom: 10px;
+}
+
+/* Khu vực 1: Grid Alien */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.alien-card {
+    background: #000;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.alien-card:hover {
+    border-color: var(--ben10-green);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 255, 68, 0.3);
+}
+
+.alien-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+/* Khu vực 2: Khoang dung hợp */
+.chamber {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.slot {
+    width: 120px;
+    height: 120px;
+    border: 2px dashed var(--ben10-green);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: rgba(0, 255, 68, 0.05);
+}
+
+.slot img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+}
+
+.plus-sign {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--ben10-green);
+}
+
+.fuse-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--ben10-green);
+    color: #000;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.fuse-btn:disabled {
+    background-color: #333;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.fuse-btn:not(:disabled):hover {
+    background-color: #fff;
+    box-shadow: 0 0 15px var(--ben10-green);
+}
+
+/* Khu vực 3: Kết quả */
+.hidden { display: none !important; }
+
+#fusion-image-container {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#fusion-image {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px var(--ben10-green));
+}
+
+.rank-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    background: var(--ben10-green);
+    color: #000;
+    border-radius: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.chart-container {
+    margin-top: 20px;
+    background: #000;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* Hiệu ứng Đột biến */
+.mutation-gold {
+    border-color: gold !important;
+    box-shadow: 0 0 20px gold !important;
+}
+
+.mutation-glitch {
+    animation: glitch 0.5s infinite;
+}
+
+@keyframes glitch {
+    0% { transform: translate(0) }
+    20% { transform: translate(-2px, 2px) }
+    40% { transform: translate(-2px, -2px) }
+    60% { transform: translate(2px, 2px) }
+    80% { transform: translate(2px, -2px) }
+    100% { transform: translate(0) }
+}

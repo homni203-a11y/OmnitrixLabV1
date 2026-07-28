@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmnitrixLab - Fusion Chamber</title>
+    
+    <!-- Liên kết file CSS -->
+    <link rel="stylesheet" href="./style.css">
+    
+    <!-- Thư viện Chart.js để vẽ biểu đồ Radar -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="logo">
+            <h1>OMNITRIX LAB 🧬</h1>
+            <p>Hệ thống Lai tạo Alien Nhân tạo</p>
+        </div>
+        <!-- Nhãn định danh team thiết kế -->
+        <div class="to3-badge">TỔ 3</div>
+    </header>
+
+    <main class="dashboard">
+        
+        <!-- Khu vực 1: Danh sách Alien Gốc (Pokédex Style) -->
+        <section class="panel" id="pokedex-panel">
+            <h2>KHO LƯU TRỮ ALIEN</h2>
+            <div id="alien-grid" class="grid-container">
+                <!-- Javascript sẽ tự động điền các Alien từ data.js vào đây -->
+            </div>
+        </section>
+
+        <!-- Khu vực 2: Khoang Dung Hợp (Fusion Chamber) -->
+        <section class="panel" id="fusion-panel">
+            <h2>KHOANG DUNG HỢP</h2>
+            <div class="chamber">
+                <div class="slot" id="slot-1">
+                    <span>Chọn Alien 1</span>
+                </div>
+                <div class="plus-sign">+</div>
+                <div class="slot" id="slot-2">
+                    <span>Chọn Alien 2</span>
+                </div>
+            </div>
+            
+            <button id="btn-fuse" class="fuse-btn" disabled>BẮT ĐẦU DUNG HỢP</button>
+            <p id="fusion-message" class="message"></p>
+        </section>
+
+        <!-- Khu vực 3: Màn hình Kết quả & Chỉ số -->
+        <section class="panel" id="result-panel">
+            <h2>THÔNG SỐ ĐỘT BIẾN</h2>
+            
+            <div id="result-card" class="hidden">
+                <!-- Thẻ hiển thị Alien mới -->
+                <div id="fusion-image-container">
+                    <img id="fusion-image" src="" alt="Alien Mới">
+                </div>
+                
+                <h3 id="fusion-name">Tên Alien Mới</h3>
+                <div class="rank-badge" id="fusion-rank">Hạng: SS</div>
+                
+                <div class="info-list">
+                    <p><strong>Hệ:</strong> <span id="fusion-type"></span></p>
+                    <p><strong>Mức độ nguy hiểm:</strong> <span id="fusion-danger"></span></p>
+                    <p><strong>Đột biến:</strong> <span id="fusion-mutation"></span></p>
+                    <p><strong>Kỹ năng nổi bật:</strong></p>
+                    <ul id="fusion-skills"></ul>
+                </div>
+
+                <!-- Biểu đồ Radar -->
+                <div class="chart-container">
+                    <canvas id="radar-chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Gọi file Javascript chính (Bắt buộc type="module") -->
+    <script type="module" src="./main.js"></script>
+</body>
+</html>
