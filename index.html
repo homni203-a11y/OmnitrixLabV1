@@ -3,114 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LÕI OMNITRIX - BIOMNITRIX</title>
-    
-    <!-- Liên kết file CSS -->
-    <link rel="stylesheet" href="./style.css">
-    
-    <!-- Thư viện Chart.js để vẽ biểu đồ Radar -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Lõi Omnitrix - Báo Cáo Mã Gen</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <header class="app-header">
-        <div class="logo">
-            <span class="gemini-icon">✦</span>
-            <div>
-                <h1>LÕI OMNITRIX</h1>
-                <p>USER_ID // TENNYSON</p>
-            </div>
-        </div>
-        <div class="header-actions">
-            <button class="btn-outline">ĐẤU TRƯỜNG</button>
-            <button class="btn-outline">BỘ SƯU TẬP</button>
-            <div class="to3-badge">TỔ 3</div>
-        </div>
-    </header>
-
-    <main class="dashboard">
+    <div class="app-container">
         
-        <!-- CỘT TRÁI: ĐIỀU KHIỂN & CHỌN GEN -->
+        <!-- CỘT TRÁI: BẢNG ĐIỀU KHIỂN (SIDEBAR) -->
         <aside class="sidebar">
-            <!-- Tabs mô phỏng -->
-            <div class="mode-tabs">
-                <button class="tab">ULTIMATE</button>
-                <button class="tab active">BIOMNITRIX</button>
-                <button class="tab">CHAQUETRIX</button>
+            <header class="sidebar__header">
+                <div class="icon-stars">✦</div>
+                <h2 class="sidebar__title">CHUỖI GEN ĐA HỢP</h2>
+                <div class="sidebar__controls">
+                    <button class="btn-icon">🎲</button>
+                    <div class="counter">
+                        <span>-</span>
+                        <span>2</span>
+                        <span>+</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Khung chọn ADN -->
+            <section class="dna-selection">
+                <article class="dna-card">
+                    <div class="dna-card__header">
+                        <span>ADN 1</span>
+                        <button class="btn-close">×</button>
+                    </div>
+                    <div class="dna-card__image-box">
+                        <!-- Placeholder cho Mucilator -->
+                        <div class="img-placeholder" style="background-image: linear-gradient(to top, #1a2a3a, transparent);">
+                            <span style="color: #6d8ba6; font-size: 3rem;">👽</span>
+                        </div>
+                        <h3 class="dna-card__name">MUCILATOR</h3>
+                    </div>
+                    <div class="dna-card__footer">
+                        <span class="icon-expand">⛶ SIZE</span>
+                        <div class="size-bars">
+                            <div class="bar active"></div><div class="bar active"></div>
+                            <div class="bar active"></div><div class="bar active highlight"></div>
+                            <div class="bar"></div>
+                        </div>
+                        <span class="size-label">LỚN</span>
+                    </div>
+                </article>
+
+                <article class="dna-card">
+                    <div class="dna-card__header">
+                        <span>ADN 2</span>
+                        <button class="btn-close">×</button>
+                    </div>
+                    <div class="dna-card__image-box">
+                        <!-- Placeholder cho Astrodactyl -->
+                        <div class="img-placeholder" style="background-image: linear-gradient(to top, #3a221a, transparent);">
+                            <span style="color: #a66d53; font-size: 3rem;">🦖</span>
+                        </div>
+                        <h3 class="dna-card__name" style="color: var(--omnitrix-green);">ASTRODACTYL</h3>
+                    </div>
+                    <div class="dna-card__footer">
+                        <span class="icon-expand">⛶ SIZE</span>
+                        <div class="size-bars">
+                            <div class="bar active"></div><div class="bar active"></div>
+                            <div class="bar active highlight"></div><div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+                        <span class="size-label" style="color: var(--omnitrix-green);">B.THƯỜNG</span>
+                    </div>
+                </article>
+            </section>
+
+            <div class="divider">
+                <span>⟳ CÂN BẰNG ĐA GEN TỰ ĐỘNG (5 DNA)</span>
             </div>
 
-            <!-- Khu vực thiết lập gen -->
-            <section class="panel dna-setup">
-                <div class="panel-header">
-                    <h2>CHUỖI GEN ĐA HỢP</h2>
+            <!-- Kiểm soát gen -->
+            <section class="mutation-control">
+                <h3 class="control-title"><span class="icon-wave">((o))</span> KIỂM SOÁT BẤT ỔN GEN</h3>
+                <div class="toggle-group">
+                    <button class="toggle-btn active">ỔN ĐỊNH</button>
+                    <button class="toggle-btn">BẤT ỔN</button>
+                    <button class="toggle-btn">HỖN MANG</button>
                 </div>
-                
-                <!-- Slots (Thay vì 3, giao diện mới ưu tiên 2 slot to) -->
-                <div class="chamber" id="fusion-slots">
-                    <!-- JS sẽ render ADN 1 và ADN 2 vào đây -->
-                </div>
-
-                <button id="fuse-btn" class="fuse-btn" disabled>
-                    <span class="spinner"></span> ĐANG XỬ LÝ...
-                </button>
+                <p class="control-desc">Giữ nguyên cấu trúc gốc, ốp giáp/màu sắc, chân thực cao.</p>
             </section>
 
-            <!-- Kho lưu trữ (Đưa xuống dưới, dạng cuộn ngang/dọc gọn gàng) -->
-            <section class="panel inventory">
-                <h2>KHO LƯU TRỮ ALIEN</h2>
-                <div id="alien-grid" class="grid-container">
-                    <!-- JS render danh sách Alien -->
-                </div>
-            </section>
+            <!-- Nút xử lý -->
+            <button class="btn-process">
+                <span class="spinner"></span> ĐANG XỬ LÝ...
+            </button>
         </aside>
 
-        <!-- CỘT PHẢI: HIỂN THỊ KẾT QUẢ & THÔNG SỐ -->
-        <section class="main-display">
-            <div class="display-core" id="display-core">
-                <!-- Vòng tròn tâm điểm khi chưa có kết quả -->
-                <div class="core-placeholder" id="result-empty-state">
-                    <div class="glow-ring">
-                        <span class="core-icon">🧬</span>
-                    </div>
-                </div>
-
-                <!-- Khu vực hiển thị kết quả thật -->
-                <div id="result-content" class="hidden result-card">
-                    <div class="result-header">
-                        <h2 id="result-name">Tên Alien</h2>
-                        <div class="rank-badge" id="fusion-rank">
-                            Hạng: <span id="rank-value">SS</span>
-                        </div>
-                    </div>
-
-                    <div class="result-body">
-                        <!-- Cột ảnh -->
-                        <div class="result-visual">
-                            <div id="result-image-box" class="image-box">
-                                <!-- Chứa ảnh dung hợp (icon/AI) -->
-                            </div>
-                            <div class="mutation-badge" id="result-mutation-badge">Bình thường</div>
-                        </div>
-
-                        <!-- Cột thông số -->
-                        <div class="result-stats">
-                            <div class="info-list">
-                                <p><strong>Hệ:</strong> <span id="result-types"></span></p>
-                                <p><strong>Nguy hiểm:</strong> <span id="result-danger-level"></span></p>
-                                <p id="result-parents" class="text-muted"></p>
-                            </div>
-                            
-                            <div class="chart-container">
-                                <canvas id="result-radar-canvas"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- CỘT PHẢI: MÀN HÌNH HIỂN THỊ CHÍNH -->
+        <main class="main-display">
+            <!-- Hiệu ứng nền xoay -->
+            <div class="radar-background">
+                <div class="radar-circle circle-1"></div>
+                <div class="radar-circle circle-2"></div>
+                <div class="radar-crosshair"></div>
             </div>
-        </section>
 
-    </main>
+            <!-- Thanh điều hướng bên phải -->
+            <nav class="side-nav">
+                <button class="nav-btn active"><span>∿</span></button>
+                <button class="nav-btn"><span>◎</span></button>
+                <button class="nav-btn"><span>⌖</span></button>
+                <button class="nav-btn warning"><span>⚠</span></button>
+            </nav>
 
-    <script type="module" src="./main.js"></script>
+            <!-- Khu vực nội dung nổi -->
+            <div class="display-content">
+                
+                <!-- Bảng báo cáo thông số -->
+                <section class="info-panel">
+                    <header class="info-panel__header">
+                        <div class="header-title">
+                            <span class="icon-pulse">∿</span> BÁO CÁO MÃ GEN
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn-small">⧉</button>
+                            <button class="btn-small">✕</button>
+                        </div>
+                    </header>
+                    
+                    <div class="info-panel__id">[ MÃ ĐỊNH DANH GEN: ASTROMUC-001 ]</div>
+                    
+                    <!-- Text Omnitrix phát sáng chuẩn màu -->
+                    <h1 class="alien-name-glowing">ASTROMUCILATOR</h1>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-label">CẤP ĐỘ ĐE DỌA</span>
+                            <div class="stat-value text-danger">NGUY HIỂM<br>(MỨC ĐỘ CAO)</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <span class="stat-label">CHỈ SỐ CHIẾN ĐẤU (PL)</span>
+                            <div class="stat-value text-green" style="font-size: 2rem;">80</div>
+                        </div>
+                        
+                        <div class="stat-box radar-box">
+                            <span class="stat-label">∿ MA TRẬN CHỈ SỐ</span>
+                            <!-- Mô phỏng biểu đồ radar bằng CSS -->
+                            <div class="radar-chart-mockup">
+                                <div class="hexagon-bg"></div>
+                                <div class="hexagon-value"></div>
+                                <span class="chart-label lbl-top">SỨC MẠNH</span>
+                                <span class="chart-label lbl-tr">TỐC ĐỘ</span>
+                                <span class="chart-label lbl-br">TRÍ TUỆ</span>
+                                <span class="chart-label lbl-bot">SỨC BỀN</span>
+                                <span class="chart-label lbl-bl">NĂNG LƯỢNG</span>
+                                <span class="chart-label lbl-tl">CHIẾN KỸ</span>
+                            </div>
+                            <div class="radar-hint">⬈ NHẤN ĐỂ PHÂN TÍCH RADAR</div>
+                        </div>
+                    </div>
+
+                    <footer class="info-panel__footer">
+                        <span>PHÂN LOẠI AN TOÀN</span>
+                        <span class="text-green">RANK: NGUY HIỂM (A)</span>
+                    </footer>
+                </section>
+
+                <!-- Bục hiển thị hình ảnh Alien (White Box) -->
+                <section class="alien-stage">
+                    <div class="white-canvas">
+                        <!-- Vị trí chèn ảnh thật của Alien -->
+                        <img src="https://via.placeholder.com/400x400/ffffff/000000?text=Alien+Image" alt="Astromucilator" class="alien-img-placeholder">
+                    </div>
+                </section>
+
+            </div>
+        </main>
+
+    </div>
 </body>
 </html>
