@@ -82,6 +82,10 @@
         <div class="radar-ring radar-ring--r4" aria-hidden="true"></div>
 
         <div class="radar-core" id="radarCore" aria-live="polite">
+          <!-- Quầng glow trung tâm: đứng dưới icon (z-index thấp hơn), đồng tâm
+               tuyệt đối với icon và với cả hệ vòng radar -->
+          <div class="radar-core-glow" aria-hidden="true"></div>
+
           <div class="radar-core-icon" aria-hidden="true">
             <!-- Icon "Layers / Stack" dạng SVG, tô màu neon qua currentColor -->
             <svg viewBox="0 0 24 24" width="88" height="88" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
@@ -89,11 +93,6 @@
               <polyline points="2 17 12 22 22 17"></polyline>
               <polyline points="2 12 12 17 22 12"></polyline>
             </svg>
-          </div>
-
-          <div class="radar-core-halo" aria-hidden="true">
-            <span class="radar-core-halo-outer"></span>
-            <span class="radar-core-halo-mask"></span>
           </div>
 
           <div class="radar-core-status">CHỜ KHỞI ĐỘNG</div>
